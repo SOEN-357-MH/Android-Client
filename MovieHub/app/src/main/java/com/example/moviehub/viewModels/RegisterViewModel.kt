@@ -1,6 +1,7 @@
 package com.example.moviehub.viewModels
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.moviehub.helpers.DataStoreManager
 import com.example.moviehub.helpers.NetworkHelper
@@ -33,8 +34,6 @@ class RegisterViewModel @Inject constructor(
     private val _registerResponse = MutableStateFlow<RegisterEvent>(RegisterEvent.Empty)
     val registerResponse: StateFlow<RegisterEvent> = _registerResponse
 
-    
-
     fun registerUser(userBody: UserBody) {
         viewModelScope.launch(dispatchers.io) {
             _registerResponse.value = RegisterEvent.Loading
@@ -44,6 +43,8 @@ class RegisterViewModel @Inject constructor(
                         _registerResponse.value = RegisterEvent.Failure(response.message!!)
                     }
                     is Resource.Success -> {
+                        userBody.password = ""
+                        dataStoreManager.saveUserInfo(userBody)
                         _registerResponse.value = RegisterEvent.Success("Register Success!")
                     }
                     is Resource.Exception -> {
