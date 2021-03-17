@@ -28,6 +28,7 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
 
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = Constants.PREFERENCES_FILE_NAME)
 
+    /*** User Info ***/
     suspend fun saveUserInfo(userBody: UserBody?){
         context.dataStore.edit { preferences ->
             val jsonString = GsonBuilder().create().toJson(userBody)
@@ -48,4 +49,11 @@ class DataStoreManager @Inject constructor(@ApplicationContext private val conte
             val value = preferences[PreferencesKey.userInfo]
             GsonBuilder().create().fromJson(value, UserBody::class.java)
         }
+
+    /***Clear Data Store***/
+    suspend fun clearDataStore(){
+        context.dataStore.edit { preferences ->
+            preferences.clear()
+        }
+    }
 }
