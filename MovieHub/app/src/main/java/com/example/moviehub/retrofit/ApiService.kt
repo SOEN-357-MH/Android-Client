@@ -8,6 +8,6 @@ import retrofit2.http.PUT
 
 interface ApiService {
 
-    @PUT("account/addUser")
+    @PUT("account/user")
     suspend fun registerUser(@Body userBody: UserBody): Response<ResponseBody>
 }
