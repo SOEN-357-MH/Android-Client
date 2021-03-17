@@ -64,6 +64,9 @@ dependencies {
     implementation "androidx.navigation:navigation-fragment-ktx:2.3.4"
     implementation "androidx.navigation:navigation-ui-ktx:2.3.4"
 
+    //Data Store
+    implementation "androidx.datastore:datastore-preferences:1.0.0-alpha08"
+
     // ViewModel
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
     // LiveData

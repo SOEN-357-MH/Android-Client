@@ -2,6 +2,7 @@ package com.example.moviehub.viewModels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.moviehub.helpers.DataStoreManager
 import com.example.moviehub.helpers.NetworkHelper
 import com.example.moviehub.models.UserBody
 import com.example.moviehub.repository.MainRepository
@@ -17,7 +18,8 @@ import javax.inject.Inject
 class RegisterViewModel @Inject constructor(
     private val repository: MainRepository,
     private val dispatchers: DispatcherProvider,
-    private val networkHelper: NetworkHelper
+    private val networkHelper: NetworkHelper,
+    private val dataStoreManager: DataStoreManager
 ): ViewModel() {
 
     sealed class RegisterEvent {
@@ -30,6 +32,8 @@ class RegisterViewModel @Inject constructor(
 
     private val _registerResponse = MutableStateFlow<RegisterEvent>(RegisterEvent.Empty)
     val registerResponse: StateFlow<RegisterEvent> = _registerResponse
+
+    
 
     fun registerUser(userBody: UserBody) {
         viewModelScope.launch(dispatchers.io) {
