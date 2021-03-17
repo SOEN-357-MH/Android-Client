@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.example.moviehub.databinding.FragmentRegisterBinding
 import com.example.moviehub.models.UserBody
@@ -35,7 +36,7 @@ class RegisterFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
 
-        registerUser("John", "Baroudi", "Slayer42069", "john@gmail.com", "123456")
+        registerUser("John", "Baroudi", "Slayer4206", "john@gmail.co", "123456")
 
         return binding.root
     }

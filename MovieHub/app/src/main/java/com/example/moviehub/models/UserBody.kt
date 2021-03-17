@@ -5,5 +5,5 @@ data class UserBody(
     val lastName: String,
     val username: String,
     val email: String,
-    val password: String
+    var password: String
 )
