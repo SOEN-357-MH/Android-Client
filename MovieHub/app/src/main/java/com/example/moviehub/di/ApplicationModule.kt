@@ -1,6 +1,6 @@
 package com.example.moviehub.di
 
-import com.example.moviehub.BuildConfig
+import androidx.viewbinding.BuildConfig
 import com.example.moviehub.misc.Constants
 import com.example.moviehub.repository.DefaultMainRepository
 import com.example.moviehub.repository.MainRepository
