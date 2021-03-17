@@ -17,6 +17,8 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.lang.Exception
+import java.lang.RuntimeException
 import javax.inject.Singleton
 
 @Module
@@ -28,16 +30,21 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient() = if(BuildConfig.DEBUG){
-        val loggingInterceptor = HttpLoggingInterceptor()
-        loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
-        OkHttpClient.Builder()
-            .addInterceptor(loggingInterceptor)
-            .addInterceptor(OAuthInterceptor())
-            .build()
-    }else OkHttpClient
-        .Builder()
-        .build()
+    fun provideOkHttpClient(): OkHttpClient {
+        try {
+            val builder = OkHttpClient.Builder()
+            val interceptor: HttpLoggingInterceptor = HttpLoggingInterceptor().apply {
+                this.level = HttpLoggingInterceptor.Level.BODY
+            }
+            builder.addInterceptor(interceptor)
+                .addInterceptor(OAuthInterceptor())
+                .build()
+            return builder.build()
+        } catch (e: Exception) {
+            throw RuntimeException(e)
+
+        }
+    }
 
     @Provides
     @Singleton
