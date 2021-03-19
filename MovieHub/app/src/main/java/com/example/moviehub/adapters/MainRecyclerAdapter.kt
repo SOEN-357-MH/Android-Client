@@ -11,7 +11,6 @@ import com.example.moviehub.databinding.MovieRecyclerRowItemBinding
 import com.example.moviehub.models.AllCategory
 
 class MainRecyclerAdapter(
-    private val context: Context,
     private val allCategory: List<AllCategory>) :
     RecyclerView.Adapter<MainRecyclerAdapter.MainViewHolder>() {
 
