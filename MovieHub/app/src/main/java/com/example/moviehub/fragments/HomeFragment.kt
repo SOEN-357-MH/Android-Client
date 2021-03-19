@@ -6,30 +6,53 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.moviehub.R
 import com.example.moviehub.adapters.MainRecyclerAdapter
 import com.example.moviehub.databinding.FragmentHomeBinding
 import com.example.moviehub.models.AllCategory
+import com.example.moviehub.models.MovieItem
 import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
 
-    private val TAG = "HomeFrag"
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-    private val categoryList: MutableList<AllCategory> = ArrayList()
-    private var mainRecyclerAdapter = MainRecyclerAdapter(categoryList)
+    private var mainRecyclerAdapter : MainRecyclerAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val categoryList: MutableList<AllCategory> = ArrayList()
 
-        categoryList.add(AllCategory("TOP 10"))
-        categoryList.add(AllCategory("My Favs"))
-        categoryList.add(AllCategory("ADULT (18+)"))
-        mainRecyclerAdapter = MainRecyclerAdapter(categoryList)
+        //First Category
+        val movieItemList: MutableList<MovieItem> = ArrayList()
+        movieItemList.add(MovieItem(1, R.drawable.placeholder_icon))
+        movieItemList.add(MovieItem(1, R.drawable.placeholder_icon))
+        movieItemList.add(MovieItem(1, R.drawable.placeholder_icon))
+        movieItemList.add(MovieItem(1, R.drawable.placeholder_icon))
+
+
+        //Second Category
+        val movieItemList2: MutableList<MovieItem> = ArrayList()
+        movieItemList2.add(MovieItem(1, R.drawable.placeholder_icon))
+        movieItemList2.add(MovieItem(1, R.drawable.placeholder_icon))
+        movieItemList2.add(MovieItem(1, R.drawable.placeholder_icon))
+        movieItemList2.add(MovieItem(1, R.drawable.placeholder_icon))
+
+        //Third Category
+        val movieItemList3: MutableList<MovieItem> = ArrayList()
+        movieItemList3.add(MovieItem(1, R.drawable.placeholder_icon))
+        movieItemList3.add(MovieItem(1, R.drawable.placeholder_icon))
+        movieItemList3.add(MovieItem(1, R.drawable.placeholder_icon))
+        movieItemList3.add(MovieItem(1, R.drawable.placeholder_icon))
+
+        categoryList.add(AllCategory("TOP 10", movieItemList))
+        categoryList.add(AllCategory("My Favs", movieItemList2))
+        categoryList.add(AllCategory("ADULT (18+)", movieItemList3))
+
+        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryList)
 
     }
 
