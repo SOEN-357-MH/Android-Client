@@ -85,4 +85,6 @@ dependencies {
     //timber
     implementation 'com.jakewharton.timber:timber:4.7.1'
 
+    //Swipeable Cards
+    implementation 'com.lorentzos.swipecards:library:1.0.9'
 }
