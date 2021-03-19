@@ -35,7 +35,7 @@ class MovieTinderFragment : Fragment() {
 
 
         //choose your favorite adapter
-        arrayAdapter = ArrayAdapter(requireContext(), R.layout.movie_tinder_item, R.id.helloText, al)
+        arrayAdapter = ArrayAdapter(requireContext(), R.layout.movie_tinder_item, R.id.mtMovieName, al)
 
 
     }
