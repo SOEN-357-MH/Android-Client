@@ -48,6 +48,11 @@ class LoginFragment : Fragment() {
             Navigation.findNavController(binding.root).navigate(action)
         }
 
+        binding.tinderBTN.setOnClickListener {
+            val action = LoginFragmentDirections.actionLoginFragmentToMovieTinderFragment()
+            Navigation.findNavController(binding.root).navigate(action)
+        }
+
 
         return binding.root
     }
