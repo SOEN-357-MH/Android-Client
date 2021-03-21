@@ -19,14 +19,4 @@ interface MainRepository {
     /***
      * User api requests end
      */
-
-    /***
-     * Media api requests start
-     */
-
-    suspend fun getTrendingMoviesByPage(page: Int): Resource<ResultBody>
-
-    /***
-     * Media api requests end
-     */
 }

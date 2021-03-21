@@ -7,7 +7,7 @@ import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.*
 
-interface ApiService {
+interface MainApiService {
 
     /***
      * User api requests start
@@ -21,16 +21,5 @@ interface ApiService {
 
     /***
      * User api requests end
-     */
-
-    /***
-     * Media api requests start
-     */
-
-    @GET("media/trending/movies/{page}")
-    suspend fun getTrendingMoviesByPage(@Path("page") page: Int): Response<ResultBody>
-
-    /***
-     * Media api requests end
      */
 }

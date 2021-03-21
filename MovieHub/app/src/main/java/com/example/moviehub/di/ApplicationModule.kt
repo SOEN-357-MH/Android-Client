@@ -2,10 +2,15 @@ package com.example.moviehub.di
 
 import com.example.moviehub.misc.Constants
 import com.example.moviehub.repository.DefaultMainRepository
+import com.example.moviehub.repository.DefaultMediaRepository
 import com.example.moviehub.repository.MainRepository
-import com.example.moviehub.retrofit.ApiService
+import com.example.moviehub.repository.MediaRepository
+import com.example.moviehub.retrofit.MainApiService
+import com.example.moviehub.retrofit.MediaApiService
 import com.example.moviehub.retrofit.OAuthInterceptor
 import com.example.moviehub.utils.DispatcherProvider
+import com.example.moviehub.utils.MainRetrofit
+import com.example.moviehub.utils.MediaRetrofit
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,16 +21,12 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.lang.Exception
-import java.lang.RuntimeException
+import javax.inject.Named
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class ApplicationModule {
-
-    @Provides
-    fun provideBaseUrl() = Constants.BASE_URL
 
     @Provides
     @Singleton
@@ -47,20 +48,39 @@ class ApplicationModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient, BASE_URL: String): Retrofit =
+    @MainRetrofit
+    fun provideRetrofitMain(okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(Constants.BASE_URL_ACCOUNT)
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
 
     @Provides
     @Singleton
-    fun provideApiService(retrofit: Retrofit): ApiService = retrofit.create(ApiService::class.java)
+    @MediaRetrofit
+    fun provideRetrofitMedia(okHttpClient: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL_MEDIA)
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
 
     @Provides
     @Singleton
-    fun provideMainRepository(api: ApiService): MainRepository = DefaultMainRepository(api)
+    fun provideMainApiService(@MainRetrofit retrofit: Retrofit): MainApiService = retrofit.create(MainApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideMediaApiService(@MediaRetrofit retrofit: Retrofit): MediaApiService = retrofit.create(MediaApiService::class.java)
+
+    @Provides
+    @Singleton
+    fun provideMainRepository(api: MainApiService): MainRepository = DefaultMainRepository(api)
+
+    @Provides
+    @Singleton
+    fun provideMediaRepositoryRepository(api: MediaApiService): MediaRepository = DefaultMediaRepository(api)
 
     @Provides
     @Singleton

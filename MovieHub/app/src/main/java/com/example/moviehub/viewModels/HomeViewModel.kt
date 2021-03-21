@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviehub.helpers.NetworkHelper
 import com.example.moviehub.repository.MainRepository
+import com.example.moviehub.repository.MediaRepository
 import com.example.moviehub.utils.DispatcherProvider
 import com.example.moviehub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val repository: MainRepository,
+    private val repository: MediaRepository,
     private val dispatchers: DispatcherProvider,
     private val networkHelper: NetworkHelper
 ): ViewModel() {
