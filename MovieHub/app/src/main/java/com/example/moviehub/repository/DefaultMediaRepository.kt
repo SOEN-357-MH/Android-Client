@@ -49,4 +49,17 @@ class DefaultMediaRepository @Inject constructor(
             Resource.Exception(e.message ?: "An error occurred")
         }
     }
+
+    override suspend fun getTrendingShowsByPage(page: Int): Resource<ResultBody> {
+        return try {
+            val response = api.getTrendingShowsByPage(page)
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!, null)
+            }else {
+                Resource.Error(response.message())
+            }
+        } catch (e: Exception){
+            Resource.Exception(e.message ?: "An error occurred")
+        }
+    }
 }

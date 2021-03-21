@@ -16,6 +16,8 @@ interface MediaRepository {
 
     suspend fun getTrendingMoviesByPage(page: Int): Resource<ResultBody>
 
+    suspend fun getTrendingShowsByPage(page: Int): Resource<ResultBody>
+
     /***
      * Media api requests end
      */

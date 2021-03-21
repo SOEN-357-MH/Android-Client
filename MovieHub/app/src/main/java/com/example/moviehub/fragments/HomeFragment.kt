@@ -33,31 +33,9 @@ class HomeFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         observeTrendingMoviesByPage()
+        observeTrendingShowsByPage()
         observeBaseImageUrl()
         observeImageSize()
-
-//        //First Category
-//        val movieItemList: MutableList<MovieItem> = ArrayList()
-//        movieItemList.add(MovieItem(1, R.drawable.placeholder_icon))
-//        movieItemList.add(MovieItem(1, R.drawable.placeholder_icon))
-//        movieItemList.add(MovieItem(1, R.drawable.placeholder_icon))
-//        movieItemList.add(MovieItem(1, R.drawable.placeholder_icon))
-//
-//
-//        //Second Category
-//        val movieItemList2: MutableList<MovieItem> = ArrayList()
-//        movieItemList2.add(MovieItem(1, R.drawable.placeholder_icon))
-//        movieItemList2.add(MovieItem(1, R.drawable.placeholder_icon))
-//        movieItemList2.add(MovieItem(1, R.drawable.placeholder_icon))
-//        movieItemList2.add(MovieItem(1, R.drawable.placeholder_icon))
-//
-//        //Third Category
-//        val movieItemList3: MutableList<MovieItem> = ArrayList()
-//        movieItemList3.add(MovieItem(1, R.drawable.placeholder_icon))
-//        movieItemList3.add(MovieItem(1, R.drawable.placeholder_icon))
-//        movieItemList3.add(MovieItem(1, R.drawable.placeholder_icon))
-//        movieItemList3.add(MovieItem(1, R.drawable.placeholder_icon))
-
     }
 
     override fun onCreateView(
@@ -83,13 +61,8 @@ class HomeFragment : Fragment() {
                         for(movie in viewModel.movieList!!){
                             movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSize}${movie.poster_path}"
                         }
-                        categoryList.add(AllCategory("TOP 10", viewModel.movieList!!))
-                        categoryList.add(AllCategory("My Favs", viewModel.movieList!!))
-                        categoryList.add(AllCategory("ADULT (18+)", viewModel.movieList!!))
-
-                        Timber.d("catergory:${categoryList.toString()}")
-                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryList)
-                        binding.homeRecyclerView.adapter = mainRecyclerAdapter
+                        categoryList.add(AllCategory("Trending Movies", viewModel.movieList!!))
+                        viewModel.getTrendingShowsByPage(1)
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
                     is HomeViewModel.GetTrendingMoviesByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
@@ -97,6 +70,30 @@ class HomeFragment : Fragment() {
 
                     }
                     is HomeViewModel.GetTrendingMoviesByPageEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeTrendingShowsByPage(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.getTrendingShowsByPageResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.GetTrendingShowsByPageEvent.Success -> {
+                        for(show in viewModel.showList!!){
+                            show.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSize}${show.poster_path}"
+                        }
+                        categoryList.add(AllCategory("Trending Shows", viewModel.showList!!))
+                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryList)
+                        binding.homeRecyclerView.adapter = mainRecyclerAdapter
+                        Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
+                    }
+                    is HomeViewModel.GetTrendingShowsByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetTrendingShowsByPageEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.GetTrendingShowsByPageEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
                     else -> Unit
                 }
             }

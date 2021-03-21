@@ -21,6 +21,9 @@ interface MediaApiService {
     @GET("media/trending/movie/{page}")
     suspend fun getTrendingMoviesByPage(@Path("page") page: Int): Response<ResultBody>
 
+    @GET("/media/trending/show/{page}")
+    suspend fun getTrendingShowsByPage(@Path("page") page: Int): Response<ResultBody>
+
     /***
      * Media api requests end
      */

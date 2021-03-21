@@ -48,8 +48,19 @@ class HomeViewModel @Inject constructor(
         object Empty: GetImageSizeEvent()
     }
 
+    sealed class GetTrendingShowsByPageEvent {
+        class Success(val resultText: String): GetTrendingShowsByPageEvent()
+        class Failure(val errorText: String): GetTrendingShowsByPageEvent()
+        class Exception(val exceptionText: String): GetTrendingShowsByPageEvent()
+        object Loading: GetTrendingShowsByPageEvent()
+        object Empty: GetTrendingShowsByPageEvent()
+    }
+
     private val _getTrendingMoviesByPageResponse = MutableStateFlow<GetTrendingMoviesByPageEvent>(GetTrendingMoviesByPageEvent.Empty)
     val getTrendingMoviesByPageResponse: StateFlow<GetTrendingMoviesByPageEvent> = _getTrendingMoviesByPageResponse
+
+    private val _getTrendingShowsByPageResponse = MutableStateFlow<GetTrendingShowsByPageEvent>(GetTrendingShowsByPageEvent.Empty)
+    val getTrendingShowsByPageResponse: StateFlow<GetTrendingShowsByPageEvent> = _getTrendingShowsByPageResponse
 
     private val _getBaseImageUrlResponse = MutableStateFlow<GetBaseImageUrlEvent>(GetBaseImageUrlEvent.Empty)
     val getBaseImageUrlResponse: StateFlow<GetBaseImageUrlEvent> = _getBaseImageUrlResponse
@@ -58,6 +69,7 @@ class HomeViewModel @Inject constructor(
     val getImageSizeResponse: StateFlow<GetImageSizeEvent> = _getImageSizeResponse
 
     var movieList: ArrayList<MediaBody>? = null
+    var showList: ArrayList<MediaBody>? = null
     var baseImageUrl: String? = null
     var imageSize: String? = null
 
@@ -74,6 +86,22 @@ class HomeViewModel @Inject constructor(
                     is Resource.Exception -> _getTrendingMoviesByPageResponse.value = GetTrendingMoviesByPageEvent.Exception(response.message!!)
                 }
             }else _getTrendingMoviesByPageResponse.value = GetTrendingMoviesByPageEvent.Failure("No internet connection")
+        }
+    }
+
+    fun getTrendingShowsByPage(page: Int){
+        viewModelScope.launch(dispatchers.io){
+            _getTrendingShowsByPageResponse.value = GetTrendingShowsByPageEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = repository.getTrendingShowsByPage(page)){
+                    is Resource.Success -> {
+                        showList = response.data?.results
+                        _getTrendingShowsByPageResponse.value = GetTrendingShowsByPageEvent.Success("Trending Shows Retrieved")
+                    }
+                    is Resource.Error -> _getTrendingShowsByPageResponse.value = GetTrendingShowsByPageEvent.Failure(response.message!!)
+                    is Resource.Exception -> _getTrendingShowsByPageResponse.value = GetTrendingShowsByPageEvent.Exception(response.message!!)
+                }
+            }else _getTrendingShowsByPageResponse.value = GetTrendingShowsByPageEvent.Failure("No internet connection")
         }
     }
 
