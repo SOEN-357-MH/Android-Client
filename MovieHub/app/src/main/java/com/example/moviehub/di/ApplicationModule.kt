@@ -11,6 +11,7 @@ import com.example.moviehub.retrofit.OAuthInterceptor
 import com.example.moviehub.utils.DispatcherProvider
 import com.example.moviehub.utils.MainRetrofit
 import com.example.moviehub.utils.MediaRetrofit
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,7 +54,7 @@ class ApplicationModule {
         Retrofit.Builder()
             .baseUrl(Constants.BASE_URL_ACCOUNT)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
             .build()
 
     @Provides
@@ -63,7 +64,7 @@ class ApplicationModule {
         Retrofit.Builder()
             .baseUrl(Constants.BASE_URL_MEDIA)
             .client(okHttpClient)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().setLenient().create()))
             .build()
 
     @Provides

@@ -3,17 +3,18 @@ package com.example.moviehub.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.example.moviehub.databinding.MovieRowItemsBinding
-import com.example.moviehub.models.MovieItem
+import com.example.moviehub.models.MediaBody
 
 class MovieItemAdapter(
-    private val movieItemList: List<MovieItem>) :
+    private val movieItemList: ArrayList<MediaBody>) :
     RecyclerView.Adapter<MovieItemAdapter.MovieItemViewHolder>() {
 
     inner class MovieItemViewHolder(val binding: MovieRowItemsBinding): RecyclerView.ViewHolder(binding.root){
 
-        fun bind(movieItem: MovieItem){
-            binding.mriMovieImage.setImageResource(movieItem.imageUrl)
+        fun bind(movieItem: MediaBody){
+            binding.mriMovieImage.load(movieItem.poster_path)
         }
 
     }

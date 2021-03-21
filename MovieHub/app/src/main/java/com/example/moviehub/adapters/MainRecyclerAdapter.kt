@@ -7,12 +7,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.moviehub.databinding.MovieRecyclerRowItemBinding
 import com.example.moviehub.models.AllCategory
-import com.example.moviehub.models.MovieItem
 
 
 class MainRecyclerAdapter(
     private val context: Context,
-    private val allCategory: List<AllCategory>) :
+    private val allCategory: ArrayList<AllCategory>) :
     RecyclerView.Adapter<MainRecyclerAdapter.MainViewHolder>() {
 
     inner class MainViewHolder(val binding: MovieRecyclerRowItemBinding): RecyclerView.ViewHolder(binding.root){

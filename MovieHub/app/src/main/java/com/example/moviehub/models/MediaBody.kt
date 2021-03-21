@@ -7,7 +7,7 @@ data class MediaBody(
     val backdrop_path: String,
     val genre_ids: ArrayList<Int>,
     val original_language: String,
-    val poster_path: String,
+    var poster_path: String,
     val title: String,
     val Overview: String,
     val media_type: String,
