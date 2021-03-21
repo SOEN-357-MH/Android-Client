@@ -11,7 +11,7 @@ interface MediaApiService {
      * Media api requests start
      */
 
-    @GET("media/trending/movies/{page}")
+    @GET("media/trending/movie/{page}")
     suspend fun getTrendingMoviesByPage(@Path("page") page: Int): Response<ResultBody>
 
     /***
