@@ -9,7 +9,7 @@ data class MediaBody(
     val id: Int,
     val release_date: String,
     val adult: Boolean,
-    val backdrop_path: String,
+    var backdrop_path: String,
     val genre_ids: ArrayList<Int>,
     val original_language: String,
     var poster_path: String,
