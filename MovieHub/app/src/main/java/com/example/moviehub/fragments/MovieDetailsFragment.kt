@@ -24,7 +24,7 @@ class MovieDetailsFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val animation = TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
         sharedElementEnterTransition = animation
-        //sharedElementReturnTransition = animation
+        sharedElementReturnTransition = animation
 
     }
 
@@ -34,7 +34,12 @@ class MovieDetailsFragment : Fragment() {
     ): View {
         _binding = FragmentMovieDetailsBinding.inflate(inflater,container, false)
 
-        //binding.detailMovieImg.load(args.mediaBody.poster_path)
+        binding.mriMovieImage.load(args.mediaBody.poster_path)
+        binding.backdropIMG.load(args.mediaBody.backdrop_path)
+        binding.dTitle.text = args.mediaBody.title
+        binding.dStreamingService.text = args.mediaBody.providers?.results?.CA!!.flatrate[0].provider_name
+        binding.dStreamingLogo.load(args.mediaBody.providers?.results?.CA!!.flatrate[0].logo_path)
+
 
         // Inflate the layout for this fragment
         return binding.root

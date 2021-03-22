@@ -4,27 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
-import androidx.navigation.fragment.FragmentNavigator
-import androidx.navigation.fragment.FragmentNavigatorExtras
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.transition.TransitionInflater
-import com.example.moviehub.R
 import com.example.moviehub.adapters.MainRecyclerAdapter
-import com.example.moviehub.adapters.MovieItemAdapter
 import com.example.moviehub.databinding.FragmentHomeBinding
 import com.example.moviehub.models.AllCategory
-import com.example.moviehub.models.MediaBody
 import com.example.moviehub.viewModels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -59,11 +49,20 @@ class HomeFragment : Fragment(){
         _binding = FragmentHomeBinding.inflate(inflater,container,false)
 
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(activity)
-        binding.homeRecyclerView.adapter = mainRecyclerAdapter
-        binding.homeRecyclerView.setHasFixedSize(true)
+
 
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.homeRecyclerView.adapter = mainRecyclerAdapter
+        postponeEnterTransition()
+        binding.homeRecyclerView.viewTreeObserver.addOnPreDrawListener {
+            startPostponedEnterTransition()
+            true
+        }
     }
 
     private fun observeTrendingMoviesByPage(){
@@ -73,6 +72,7 @@ class HomeFragment : Fragment(){
                     is HomeViewModel.GetTrendingMoviesByPageEvent.Success -> {
                         for (movie in viewModel.movieList) {
                             movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.poster_path}"
+                            movie.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.backdrop_path}"
                             viewModel.getMovieProviders(movie.id)
                         }
                         categoryList.add(AllCategory("Trending Movies", viewModel.movieList))
@@ -97,16 +97,12 @@ class HomeFragment : Fragment(){
                     is HomeViewModel.GetTrendingShowsByPageEvent.Success -> {
                         for(show in viewModel.showList){
                             show.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.poster_path}"
+                            show.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.backdrop_path}"
                             show.title = show.name
                         }
                         categoryList.add(AllCategory("Trending Shows", viewModel.showList))
                         mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryList)
                         binding.homeRecyclerView.adapter = mainRecyclerAdapter
-                            postponeEnterTransition()
-                        binding.homeRecyclerView.viewTreeObserver.addOnPreDrawListener {
-                                startPostponedEnterTransition()
-                                true
-                            }
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
                     is HomeViewModel.GetTrendingShowsByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
