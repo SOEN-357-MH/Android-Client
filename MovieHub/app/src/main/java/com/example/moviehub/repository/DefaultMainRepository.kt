@@ -1,15 +1,16 @@
 package com.example.moviehub.repository
 
 import com.example.moviehub.models.LoginBody
+import com.example.moviehub.models.ResultBody
 import com.example.moviehub.models.UserBody
-import com.example.moviehub.retrofit.ApiService
+import com.example.moviehub.retrofit.MainApiService
 import com.example.moviehub.utils.Resource
 import okhttp3.ResponseBody
 import java.lang.Exception
 import javax.inject.Inject
 
 class DefaultMainRepository @Inject constructor(
-    private val api: ApiService
+    private val api: MainApiService
 ): MainRepository {
 
     override suspend fun loginUser(loginBody: LoginBody): Resource<ResponseBody> {
