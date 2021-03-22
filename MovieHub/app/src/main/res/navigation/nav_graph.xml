@@ -29,10 +29,23 @@
         android:id="@+id/homeFragment"
         android:name="com.example.moviehub.fragments.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/movieTinderFragment"
         android:name="com.example.moviehub.fragments.MovieTinderFragment"
         android:label="fragment_movie_tinder"
         tools:layout="@layout/fragment_movie_tinder" />
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="com.example.moviehub.fragments.MovieDetailsFragment"
+        android:label="fragment_movie_details"
+        tools:layout="@layout/fragment_movie_details" >
+        <argument
+            android:name="mediaBody"
+            app:argType="com.example.moviehub.models.MediaBody" />
+    </fragment>
 </navigation>
