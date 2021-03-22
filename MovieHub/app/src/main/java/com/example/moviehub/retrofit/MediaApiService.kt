@@ -29,8 +29,6 @@ interface MediaApiService {
     @GET("media/trending/show/{page}")
     suspend fun getTrendingShowsByPage(@Path("page") page: Int): Response<ResultBody>
 
-    @GET
-
     @GET("media/discover/movie")
     suspend fun getMoviesBasedOnFilter(@Query("page") page: Int, @Query("with_watch_providers")providers: String, @Query("with_genres")genres: String): Response<ResultBody>
 

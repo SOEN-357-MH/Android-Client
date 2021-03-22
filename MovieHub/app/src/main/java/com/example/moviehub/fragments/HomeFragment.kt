@@ -19,6 +19,7 @@ import com.example.moviehub.models.MediaBody
 import com.example.moviehub.viewModels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -40,6 +41,9 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
         observeBaseImageUrl()
         observeImageSize()
         observeMovieGenres()
+
+        viewModel.getBaseImageUrl()
+        viewModel.getMovieGenres()
     }
 
     override fun onCreateView(
@@ -48,11 +52,9 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater,container,false)
 
-        viewModel.getBaseImageUrl()
-        viewModel.getMovieGenres()
-
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(activity)
-        //binding.homeRecyclerView.adapter = mainRecyclerAdapter
+        binding.homeRecyclerView.adapter = mainRecyclerAdapter
+        binding.homeRecyclerView.setHasFixedSize(true)
 
 
         return binding.root
