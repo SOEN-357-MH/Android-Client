@@ -1,5 +1,10 @@
 package com.example.moviehub.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
+
+@Parcelize
 data class MediaBody(
     val id: Int,
     val release_date: String,
@@ -15,5 +20,4 @@ data class MediaBody(
     val name: String,
     val first_air_date: String,
     val genres: ArrayList<String>
-
-)
+) : Parcelable

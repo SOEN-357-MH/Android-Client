@@ -36,7 +36,7 @@ class RegisterFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
 
-        registerUser("John", "Baroudi", "Slayer4206", "john@gmail.co", "123456")
+        registerUser("John", "Baroudi", "Slayer42069", "john@gmail.com", "123456")
 
         return binding.root
     }

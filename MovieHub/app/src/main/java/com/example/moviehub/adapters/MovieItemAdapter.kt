@@ -3,11 +3,11 @@ package com.example.moviehub.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.moviehub.databinding.MovieRowItemsBinding
 import com.example.moviehub.models.MediaBody
-import timber.log.Timber
 
 class MovieItemAdapter(
     private val movieItemList: ArrayList<MediaBody>,
@@ -15,7 +15,7 @@ class MovieItemAdapter(
 ) : RecyclerView.Adapter<MovieItemAdapter.MovieItemViewHolder>() {
 
     interface ClickMediaListener {
-        fun onClick(mediaBody: MediaBody)
+        fun onClick(mediaBody: MediaBody, mriMovieImage: ImageView)
     }
 
     inner class MovieItemViewHolder(
@@ -29,7 +29,7 @@ class MovieItemAdapter(
         }
 
         override fun onClick(v: View?) {
-            clickMediaListener.onClick(movieItemList[adapterPosition])
+            clickMediaListener.onClick(movieItemList[adapterPosition], binding.mriMovieImage)
         }
 
     }
