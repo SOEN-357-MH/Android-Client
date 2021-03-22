@@ -3,6 +3,7 @@ package com.example.moviehub.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviehub.helpers.NetworkHelper
+import com.example.moviehub.models.GenreModel
 import com.example.moviehub.models.MediaBody
 import com.example.moviehub.repository.MainRepository
 import com.example.moviehub.repository.MediaRepository
@@ -56,6 +57,14 @@ class HomeViewModel @Inject constructor(
         object Empty: GetTrendingShowsByPageEvent()
     }
 
+    sealed class GetMovieGenresEvent {
+        class Success(val resultText: String): GetMovieGenresEvent()
+        class Failure(val errorText: String): GetMovieGenresEvent()
+        class Exception(val exceptionText: String): GetMovieGenresEvent()
+        object Loading: GetMovieGenresEvent()
+        object Empty: GetMovieGenresEvent()
+    }
+
     private val _getTrendingMoviesByPageResponse = MutableStateFlow<GetTrendingMoviesByPageEvent>(GetTrendingMoviesByPageEvent.Empty)
     val getTrendingMoviesByPageResponse: StateFlow<GetTrendingMoviesByPageEvent> = _getTrendingMoviesByPageResponse
 
@@ -68,11 +77,15 @@ class HomeViewModel @Inject constructor(
     private val _getImageSizeResponse = MutableStateFlow<GetImageSizeEvent>(GetImageSizeEvent.Empty)
     val getImageSizeResponse: StateFlow<GetImageSizeEvent> = _getImageSizeResponse
 
+    private val _getMovieGenresResponse = MutableStateFlow<GetMovieGenresEvent>(GetMovieGenresEvent.Empty)
+    val getMovieGenresResponse: StateFlow<GetMovieGenresEvent> = _getMovieGenresResponse
+
     var movieList = arrayListOf<MediaBody>()
     var showList = arrayListOf<MediaBody>()
     var baseImageUrl: String? = null
     var imageSize: String? = null
     var pageCounter = 1
+    var movieGenres: GenreModel? = null
 
     fun getTrendingMoviesByPage(page: Int){
         viewModelScope.launch(dispatchers.io){
@@ -135,6 +148,22 @@ class HomeViewModel @Inject constructor(
                     is Resource.Exception -> _getImageSizeResponse.value = GetImageSizeEvent.Exception(response.message!!)
                 }
             }else _getImageSizeResponse.value = GetImageSizeEvent.Failure("No internet connection")
+        }
+    }
+
+    fun getMovieGenres() {
+        viewModelScope.launch(dispatchers.io){
+            _getMovieGenresResponse.value = GetMovieGenresEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = repository.getMovieGenres()){
+                    is Resource.Success -> {
+                        movieGenres = response.data
+                        _getMovieGenresResponse.value = GetMovieGenresEvent.Success("Movie Genres Retrieved")
+                    }
+                    is Resource.Error -> _getMovieGenresResponse.value = GetMovieGenresEvent.Failure(response.message!!)
+                    is Resource.Exception -> _getMovieGenresResponse.value = GetMovieGenresEvent.Exception(response.message!!)
+                }
+            }else _getMovieGenresResponse.value = GetMovieGenresEvent.Failure("No internet connection")
         }
     }
 }

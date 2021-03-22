@@ -1,5 +1,6 @@
 package com.example.moviehub.repository
 
+import com.example.moviehub.models.GenreModel
 import com.example.moviehub.models.ResultBody
 import com.example.moviehub.retrofit.MediaApiService
 import com.example.moviehub.utils.Resource
@@ -27,6 +28,19 @@ class DefaultMediaRepository @Inject constructor(
     override suspend fun getImageSize(): Resource<ResponseBody> {
         return try {
             val response = api.getImageSize()
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!, null)
+            }else {
+                Resource.Error(response.message())
+            }
+        } catch (e: Exception){
+            Resource.Exception(e.message ?: "An error occurred")
+        }
+    }
+
+    override suspend fun getMovieGenres(): Resource<GenreModel> {
+        return try {
+            val response = api.getMovieGenres()
             if(response.isSuccessful){
                 Resource.Success(response.body()!!, null)
             }else {

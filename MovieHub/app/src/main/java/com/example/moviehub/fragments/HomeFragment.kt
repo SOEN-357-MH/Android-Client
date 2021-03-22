@@ -38,6 +38,7 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
         observeTrendingShowsByPage()
         observeBaseImageUrl()
         observeImageSize()
+        observeMovieGenres()
     }
 
     override fun onCreateView(
@@ -47,6 +48,7 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
         _binding = FragmentHomeBinding.inflate(inflater,container,false)
 
         viewModel.getBaseImageUrl()
+        viewModel.getMovieGenres()
 
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(activity)
         binding.homeRecyclerView.adapter = mainRecyclerAdapter
@@ -135,6 +137,25 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
 
                     }
                     is HomeViewModel.GetImageSizeEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeMovieGenres(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.getMovieGenresResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.GetMovieGenresEvent.Success -> {
+                        Timber.d(viewModel.movieGenres?.genres.toString())
+                        Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
+                    }
+                    is HomeViewModel.GetMovieGenresEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetMovieGenresEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.GetMovieGenresEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
                     else -> Unit
                 }
             }

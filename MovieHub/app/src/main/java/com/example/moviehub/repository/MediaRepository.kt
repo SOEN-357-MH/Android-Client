@@ -1,5 +1,6 @@
 package com.example.moviehub.repository
 
+import com.example.moviehub.models.GenreModel
 import com.example.moviehub.models.ResultBody
 import com.example.moviehub.utils.Resource
 import okhttp3.ResponseBody
@@ -13,6 +14,8 @@ interface MediaRepository {
     suspend fun getBaseImageUrl(): Resource<ResponseBody>
 
     suspend fun getImageSize(): Resource<ResponseBody>
+
+    suspend fun getMovieGenres(): Resource<GenreModel>
 
     suspend fun getTrendingMoviesByPage(page: Int): Resource<ResultBody>
 
