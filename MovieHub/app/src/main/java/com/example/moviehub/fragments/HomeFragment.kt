@@ -10,8 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.Navigation
+import androidx.navigation.fragment.FragmentNavigator
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import coil.load
+import androidx.transition.TransitionInflater
+import com.example.moviehub.R
 import com.example.moviehub.adapters.MainRecyclerAdapter
 import com.example.moviehub.adapters.MovieItemAdapter
 import com.example.moviehub.databinding.FragmentHomeBinding
@@ -24,7 +28,7 @@ import timber.log.Timber
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
+class HomeFragment : Fragment(){
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -96,10 +100,13 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
                             show.title = show.name
                         }
                         categoryList.add(AllCategory("Trending Shows", viewModel.showList))
-                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(),this@HomeFragment , categoryList)
+                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryList)
                         binding.homeRecyclerView.adapter = mainRecyclerAdapter
-
-                        binding.imageView.load("${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${viewModel.movieList.find { it.id == 587807 }?.providers?.results?.CA!!.rent[0].logo_path}")
+                            postponeEnterTransition()
+                        binding.homeRecyclerView.viewTreeObserver.addOnPreDrawListener {
+                                startPostponedEnterTransition()
+                                true
+                            }
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
                     is HomeViewModel.GetTrendingShowsByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
@@ -195,11 +202,6 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
         _binding = null
     }
 
-    override fun onClick(mediaBody: MediaBody, mriMovieImage: ImageView) {
 
-        val action = HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment(mediaBody)
-        Navigation.findNavController(binding.root).navigate(action)
-
-    }
 
 }

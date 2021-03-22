@@ -1,9 +1,11 @@
 package com.example.moviehub.fragments
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import coil.load
@@ -20,6 +22,9 @@ class MovieDetailsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val animation = TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
+        sharedElementEnterTransition = animation
+        //sharedElementReturnTransition = animation
 
     }
 
@@ -29,10 +34,15 @@ class MovieDetailsFragment : Fragment() {
     ): View {
         _binding = FragmentMovieDetailsBinding.inflate(inflater,container, false)
 
-        binding.detailMovieImg.load(args.mediaBody.poster_path)
+        //binding.detailMovieImg.load(args.mediaBody.poster_path)
 
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setTransitionName(binding.mriMovieImage, "img_${args.mediaBody.poster_path}")
     }
 
     override fun onDestroyView() {
