@@ -24,6 +24,8 @@ interface MediaRepository {
 
     suspend fun getMovieProviders(movieId: Int): Resource<WatchProviderBody>
 
+    suspend fun getShowProviders(showId: Int): Resource<WatchProviderBody>
+
     /***
      * Media api requests end
      */

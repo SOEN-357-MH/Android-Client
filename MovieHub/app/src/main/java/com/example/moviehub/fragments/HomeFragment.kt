@@ -37,6 +37,7 @@ class HomeFragment : Fragment(){
         observeImageSizes()
         observeMovieGenres()
         observeMovieProviders()
+        observeShowProviders()
 
         viewModel.getBaseImageUrl()
         viewModel.getMovieGenres()
@@ -99,6 +100,7 @@ class HomeFragment : Fragment(){
                             show.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.poster_path}"
                             show.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.backdrop_path}"
                             show.title = show.name
+                            viewModel.getShowProviders(show.id)
                         }
                         categoryList.add(AllCategory("Trending Shows", viewModel.showList))
                         mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryList)
@@ -177,10 +179,7 @@ class HomeFragment : Fragment(){
             viewModel.getMovieProvidersResponse.collect { event ->
                 when(event){
                     is HomeViewModel.GetMovieProvidersEvent.Success -> {
-//                        viewModel.movieProvidersList[viewModel.movieProvidersList.size - 1]?.let {
-//                            Timber.d("${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${viewModel.movieProvidersList[viewModel.movieProvidersList.size - 1]?.results?.CA!!.rent[0].logo_path}")
-//                            binding.imageView.load( "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${viewModel.movieProvidersList[viewModel.movieProvidersList.size - 1]?.results?.CA!!.rent[0].logo_path}")
-//                        }
+
                     }
                     is HomeViewModel.GetMovieProvidersEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
                     is HomeViewModel.GetMovieProvidersEvent.Loading -> {
@@ -192,6 +191,24 @@ class HomeFragment : Fragment(){
             }
         }
     }
+    private fun observeShowProviders() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.getShowProvidersResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.GetShowProvidersEvent.Success -> {
+
+                    }
+                    is HomeViewModel.GetShowProvidersEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetShowProvidersEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.GetShowProvidersEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

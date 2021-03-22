@@ -74,6 +74,14 @@ class HomeViewModel @Inject constructor(
         object Empty: GetMovieProvidersEvent()
     }
 
+    sealed class GetShowProvidersEvent {
+        class Success(val resultText: String): GetShowProvidersEvent()
+        class Failure(val errorText: String): GetShowProvidersEvent()
+        class Exception(val exceptionText: String): GetShowProvidersEvent()
+        object Loading: GetShowProvidersEvent()
+        object Empty: GetShowProvidersEvent()
+    }
+
     private val _getTrendingMoviesByPageResponse = MutableStateFlow<GetTrendingMoviesByPageEvent>(GetTrendingMoviesByPageEvent.Empty)
     val getTrendingMoviesByPageResponse: StateFlow<GetTrendingMoviesByPageEvent> = _getTrendingMoviesByPageResponse
 
@@ -91,6 +99,9 @@ class HomeViewModel @Inject constructor(
 
     private val _getMovieProvidersResponse = MutableStateFlow<GetMovieProvidersEvent>(GetMovieProvidersEvent.Empty)
     val getMovieProvidersResponse: StateFlow<GetMovieProvidersEvent> = _getMovieProvidersResponse
+
+    private val _getShowProvidersResponse = MutableStateFlow<GetShowProvidersEvent>(GetShowProvidersEvent.Empty)
+    val getShowProvidersResponse: StateFlow<GetShowProvidersEvent> = _getShowProvidersResponse
 
     var movieList = arrayListOf<MediaBody>()
     var showList = arrayListOf<MediaBody>()
@@ -199,6 +210,29 @@ class HomeViewModel @Inject constructor(
                     is Resource.Exception -> _getMovieProvidersResponse.value = GetMovieProvidersEvent.Exception(response.message!!)
                 }
             }else _getMovieProvidersResponse.value = GetMovieProvidersEvent.Failure("No internet connection")
+        }
+    }
+
+    fun getShowProviders(showId: Int){
+        viewModelScope.launch(dispatchers.io){
+            _getShowProvidersResponse.value = GetShowProvidersEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = repository.getShowProviders(showId)){
+                    is Resource.Success -> {
+                        showList.find { it.id == showId }?.providers = response.data
+                        showList.find { it.id == showId }?.providers?.results?.let {
+                            it.CA?.flatrate?.let { providers ->
+                                for (provider in providers) {
+                                    provider.logo_path = "${baseImageUrl}${imageSizes[6]}${provider.logo_path}"
+                                }
+                            }
+                        }
+                        _getShowProvidersResponse.value = GetShowProvidersEvent.Success("Show Providers Retrieved")
+                    }
+                    is Resource.Error -> _getShowProvidersResponse.value = GetShowProvidersEvent.Failure(response.message!!)
+                    is Resource.Exception -> _getShowProvidersResponse.value = GetShowProvidersEvent.Exception(response.message!!)
+                }
+            }else _getShowProvidersResponse.value = GetShowProvidersEvent.Failure("No internet connection")
         }
     }
 }
