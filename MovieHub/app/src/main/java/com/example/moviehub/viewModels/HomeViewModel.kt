@@ -186,6 +186,13 @@ class HomeViewModel @Inject constructor(
                 when(val response = repository.getMovieProviders(movieId)){
                     is Resource.Success -> {
                         movieList.find { it.id == movieId }?.providers = response.data
+                        movieList.find { it.id == movieId }?.providers?.results?.let {
+                            it.CA?.flatrate?.let { providers ->
+                                for (provider in providers) {
+                                    provider.logo_path = "${baseImageUrl}${imageSizes[6]}${provider.logo_path}"
+                                }
+                            }
+                        }
                         _getMovieProvidersResponse.value = GetMovieProvidersEvent.Success("Movie Providers Retrieved")
                     }
                     is Resource.Error -> _getMovieProvidersResponse.value = GetMovieProvidersEvent.Failure(response.message!!)

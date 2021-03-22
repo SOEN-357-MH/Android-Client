@@ -5,5 +5,5 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class ProviderResultsBody(
-    val CA: ArModel
+    val CA: ArModel?
 ): Parcelable
