@@ -11,16 +11,15 @@ import com.example.moviehub.models.AllCategory
 
 class MainRecyclerAdapter(
     private val context: Context,
-    private val clickMediaListener: MovieItemAdapter.ClickMediaListener,
     private val allCategory: ArrayList<AllCategory>) :
     RecyclerView.Adapter<MainRecyclerAdapter.MainViewHolder>() {
 
-    inner class MainViewHolder(val binding: MovieRecyclerRowItemBinding, private val clickMediaListener: MovieItemAdapter.ClickMediaListener): RecyclerView.ViewHolder(binding.root){
+    inner class MainViewHolder(val binding: MovieRecyclerRowItemBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(categoryItem: AllCategory){
             binding.mrCategoryTitle.text = categoryItem.categoryTitle
             binding.mrMovieRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            binding.mrMovieRecyclerView.adapter = MovieItemAdapter(categoryItem.movieItems, clickMediaListener)
+            binding.mrMovieRecyclerView.adapter = MovieItemAdapter(categoryItem.movieItems)
             binding.mrMovieRecyclerView.hasFixedSize()
         }
     }
@@ -28,7 +27,7 @@ class MainRecyclerAdapter(
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainRecyclerAdapter.MainViewHolder {
-        return MainViewHolder(MovieRecyclerRowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false), clickMediaListener)
+        return MainViewHolder(MovieRecyclerRowItemBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
 
 
