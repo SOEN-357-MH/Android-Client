@@ -41,12 +41,12 @@ class HomeViewModel @Inject constructor(
         object Empty: GetBaseImageUrlEvent()
     }
 
-    sealed class GetImageSizeEvent {
-        class Success(val resultText: String): GetImageSizeEvent()
-        class Failure(val errorText: String): GetImageSizeEvent()
-        class Exception(val exceptionText: String): GetImageSizeEvent()
-        object Loading: GetImageSizeEvent()
-        object Empty: GetImageSizeEvent()
+    sealed class GetImageSizesEvent {
+        class Success(val resultText: String): GetImageSizesEvent()
+        class Failure(val errorText: String): GetImageSizesEvent()
+        class Exception(val exceptionText: String): GetImageSizesEvent()
+        object Loading: GetImageSizesEvent()
+        object Empty: GetImageSizesEvent()
     }
 
     sealed class GetTrendingShowsByPageEvent {
@@ -74,8 +74,8 @@ class HomeViewModel @Inject constructor(
     private val _getBaseImageUrlResponse = MutableStateFlow<GetBaseImageUrlEvent>(GetBaseImageUrlEvent.Empty)
     val getBaseImageUrlResponse: StateFlow<GetBaseImageUrlEvent> = _getBaseImageUrlResponse
 
-    private val _getImageSizeResponse = MutableStateFlow<GetImageSizeEvent>(GetImageSizeEvent.Empty)
-    val getImageSizeResponse: StateFlow<GetImageSizeEvent> = _getImageSizeResponse
+    private val _getImageSizeResponse = MutableStateFlow<GetImageSizesEvent>(GetImageSizesEvent.Empty)
+    val getImageSizeResponse: StateFlow<GetImageSizesEvent> = _getImageSizeResponse
 
     private val _getMovieGenresResponse = MutableStateFlow<GetMovieGenresEvent>(GetMovieGenresEvent.Empty)
     val getMovieGenresResponse: StateFlow<GetMovieGenresEvent> = _getMovieGenresResponse
@@ -83,7 +83,7 @@ class HomeViewModel @Inject constructor(
     var movieList = arrayListOf<MediaBody>()
     var showList = arrayListOf<MediaBody>()
     var baseImageUrl: String? = null
-    var imageSize: String? = null
+    var imageSizes = arrayListOf<String>()
     var pageCounter = 1
     var movieGenres: GenreModel? = null
 
@@ -135,19 +135,19 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    fun getImageSize(){
+    fun getImageSizes(){
         viewModelScope.launch(dispatchers.io){
-            _getImageSizeResponse.value = GetImageSizeEvent.Loading
+            _getImageSizeResponse.value = GetImageSizesEvent.Loading
             if(networkHelper.isNetworkConnected()){
-                when(val response = repository.getImageSize()){
+                when(val response = repository.getImageSizes()){
                     is Resource.Success -> {
-                        imageSize = response.data?.string()
-                        _getImageSizeResponse.value = GetImageSizeEvent.Success("Image Size Retrieved")
+                        imageSizes = response.data!!
+                        _getImageSizeResponse.value = GetImageSizesEvent.Success("Image Size Retrieved")
                     }
-                    is Resource.Error -> _getImageSizeResponse.value = GetImageSizeEvent.Failure(response.message!!)
-                    is Resource.Exception -> _getImageSizeResponse.value = GetImageSizeEvent.Exception(response.message!!)
+                    is Resource.Error -> _getImageSizeResponse.value = GetImageSizesEvent.Failure(response.message!!)
+                    is Resource.Exception -> _getImageSizeResponse.value = GetImageSizesEvent.Exception(response.message!!)
                 }
-            }else _getImageSizeResponse.value = GetImageSizeEvent.Failure("No internet connection")
+            }else _getImageSizeResponse.value = GetImageSizesEvent.Failure("No internet connection")
         }
     }
 

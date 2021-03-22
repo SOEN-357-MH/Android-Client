@@ -25,9 +25,9 @@ class DefaultMediaRepository @Inject constructor(
         }
     }
 
-    override suspend fun getImageSize(): Resource<ResponseBody> {
+    override suspend fun getImageSizes(): Resource<ArrayList<String>> {
         return try {
-            val response = api.getImageSize()
+            val response = api.getImageSizes()
             if(response.isSuccessful){
                 Resource.Success(response.body()!!, null)
             }else {

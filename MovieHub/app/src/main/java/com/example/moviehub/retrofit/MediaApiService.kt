@@ -17,8 +17,8 @@ interface MediaApiService {
     @GET("media/baseImageUrl")
     suspend fun getBaseImageUrl(): Response<ResponseBody>
 
-    @GET("media/imageSize")
-    suspend fun getImageSize(): Response<ResponseBody>
+    @GET("media/imageSizes")
+    suspend fun getImageSizes(): Response<ArrayList<String>>
 
     @GET("media/movie/genre")
     suspend fun getMovieGenres(): Response<GenreModel>

@@ -39,7 +39,7 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
         observeTrendingMoviesByPage()
         observeTrendingShowsByPage()
         observeBaseImageUrl()
-        observeImageSize()
+        observeImageSizes()
         observeMovieGenres()
 
         viewModel.getBaseImageUrl()
@@ -66,7 +66,7 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
                 when(event){
                     is HomeViewModel.GetTrendingMoviesByPageEvent.Success -> {
                         for (movie in viewModel.movieList) {
-                            movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSize}${movie.poster_path}"
+                            movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.poster_path}"
                         }
                         categoryList.add(AllCategory("Trending Movies", viewModel.movieList))
                         viewModel.getTrendingShowsByPage(1)
@@ -89,7 +89,7 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
                 when(event){
                     is HomeViewModel.GetTrendingShowsByPageEvent.Success -> {
                         for(show in viewModel.showList){
-                            show.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSize}${show.poster_path}"
+                            show.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.poster_path}"
                             show.title = show.name
                         }
                         categoryList.add(AllCategory("Trending Shows", viewModel.showList))
@@ -114,7 +114,7 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
                 when(event){
                     is HomeViewModel.GetBaseImageUrlEvent.Success -> {
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
-                        viewModel.getImageSize()
+                        viewModel.getImageSizes()
                     }
                     is HomeViewModel.GetBaseImageUrlEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
                     is HomeViewModel.GetBaseImageUrlEvent.Loading -> {
@@ -127,19 +127,19 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
         }
     }
 
-    private fun observeImageSize() {
+    private fun observeImageSizes() {
         lifecycleScope.launchWhenStarted {
             viewModel.getImageSizeResponse.collect { event ->
                 when(event){
-                    is HomeViewModel.GetImageSizeEvent.Success -> {
+                    is HomeViewModel.GetImageSizesEvent.Success -> {
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                         viewModel.getTrendingMoviesByPage(1)
                     }
-                    is HomeViewModel.GetImageSizeEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
-                    is HomeViewModel.GetImageSizeEvent.Loading -> {
+                    is HomeViewModel.GetImageSizesEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetImageSizesEvent.Loading -> {
 
                     }
-                    is HomeViewModel.GetImageSizeEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetImageSizesEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
                     else -> Unit
                 }
             }

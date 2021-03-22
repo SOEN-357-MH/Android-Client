@@ -13,7 +13,7 @@ interface MediaRepository {
 
     suspend fun getBaseImageUrl(): Resource<ResponseBody>
 
-    suspend fun getImageSize(): Resource<ResponseBody>
+    suspend fun getImageSizes(): Resource<ArrayList<String>>
 
     suspend fun getMovieGenres(): Resource<GenreModel>
 
