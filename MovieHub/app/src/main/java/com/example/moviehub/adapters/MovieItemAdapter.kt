@@ -1,26 +1,41 @@
 package com.example.moviehub.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.moviehub.databinding.MovieRowItemsBinding
 import com.example.moviehub.models.MediaBody
+import timber.log.Timber
 
 class MovieItemAdapter(
-    private val movieItemList: ArrayList<MediaBody>) :
-    RecyclerView.Adapter<MovieItemAdapter.MovieItemViewHolder>() {
+    private val movieItemList: ArrayList<MediaBody>,
+    private val clickMediaListener: ClickMediaListener
+) : RecyclerView.Adapter<MovieItemAdapter.MovieItemViewHolder>() {
 
-    inner class MovieItemViewHolder(val binding: MovieRowItemsBinding): RecyclerView.ViewHolder(binding.root){
+    interface ClickMediaListener {
+        fun onClick(mediaBody: MediaBody)
+    }
+
+    inner class MovieItemViewHolder(
+        val binding: MovieRowItemsBinding,
+        private val clickMediaListener: ClickMediaListener
+    ) : RecyclerView.ViewHolder(binding.root), View.OnClickListener {
 
         fun bind(movieItem: MediaBody){
             binding.mriMovieImage.load(movieItem.poster_path)
+            binding.root.setOnClickListener(this)
+        }
+
+        override fun onClick(v: View?) {
+            clickMediaListener.onClick(movieItemList[adapterPosition])
         }
 
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieItemAdapter.MovieItemViewHolder {
-        return MovieItemViewHolder(MovieRowItemsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
+        return MovieItemViewHolder(MovieRowItemsBinding.inflate(LayoutInflater.from(parent.context), parent, false), clickMediaListener)
     }
 
     override fun onBindViewHolder(holder: MovieItemViewHolder, position: Int) {

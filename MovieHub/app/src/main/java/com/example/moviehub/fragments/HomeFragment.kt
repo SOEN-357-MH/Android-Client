@@ -10,8 +10,10 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.moviehub.adapters.MainRecyclerAdapter
+import com.example.moviehub.adapters.MovieItemAdapter
 import com.example.moviehub.databinding.FragmentHomeBinding
 import com.example.moviehub.models.AllCategory
+import com.example.moviehub.models.MediaBody
 import com.example.moviehub.viewModels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -19,7 +21,7 @@ import timber.log.Timber
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -83,9 +85,10 @@ class HomeFragment : Fragment() {
                     is HomeViewModel.GetTrendingShowsByPageEvent.Success -> {
                         for(show in viewModel.showList!!){
                             show.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSize}${show.poster_path}"
+                            show.title = show.name
                         }
                         categoryList.add(AllCategory("Trending Shows", viewModel.showList!!))
-                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryList)
+                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(),this@HomeFragment , categoryList)
                         binding.homeRecyclerView.adapter = mainRecyclerAdapter
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
@@ -141,6 +144,10 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onClick(mediaBody: MediaBody) {
+        Toast.makeText(requireContext(), mediaBody.title, Toast.LENGTH_SHORT).show()
     }
 
 }
