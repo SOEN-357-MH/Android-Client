@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.moviehub.helpers.NetworkHelper
 import com.example.moviehub.models.GenreModel
 import com.example.moviehub.models.MediaBody
+import com.example.moviehub.models.WatchProviderBody
 import com.example.moviehub.repository.MainRepository
 import com.example.moviehub.repository.MediaRepository
 import com.example.moviehub.utils.DispatcherProvider
@@ -65,6 +66,14 @@ class HomeViewModel @Inject constructor(
         object Empty: GetMovieGenresEvent()
     }
 
+    sealed class GetMovieProvidersEvent {
+        class Success(val resultText: String): GetMovieProvidersEvent()
+        class Failure(val errorText: String): GetMovieProvidersEvent()
+        class Exception(val exceptionText: String): GetMovieProvidersEvent()
+        object Loading: GetMovieProvidersEvent()
+        object Empty: GetMovieProvidersEvent()
+    }
+
     private val _getTrendingMoviesByPageResponse = MutableStateFlow<GetTrendingMoviesByPageEvent>(GetTrendingMoviesByPageEvent.Empty)
     val getTrendingMoviesByPageResponse: StateFlow<GetTrendingMoviesByPageEvent> = _getTrendingMoviesByPageResponse
 
@@ -79,6 +88,9 @@ class HomeViewModel @Inject constructor(
 
     private val _getMovieGenresResponse = MutableStateFlow<GetMovieGenresEvent>(GetMovieGenresEvent.Empty)
     val getMovieGenresResponse: StateFlow<GetMovieGenresEvent> = _getMovieGenresResponse
+
+    private val _getMovieProvidersResponse = MutableStateFlow<GetMovieProvidersEvent>(GetMovieProvidersEvent.Empty)
+    val getMovieProvidersResponse: StateFlow<GetMovieProvidersEvent> = _getMovieProvidersResponse
 
     var movieList = arrayListOf<MediaBody>()
     var showList = arrayListOf<MediaBody>()
@@ -164,6 +176,22 @@ class HomeViewModel @Inject constructor(
                     is Resource.Exception -> _getMovieGenresResponse.value = GetMovieGenresEvent.Exception(response.message!!)
                 }
             }else _getMovieGenresResponse.value = GetMovieGenresEvent.Failure("No internet connection")
+        }
+    }
+
+    fun getMovieProviders(movieId: Int) {
+        viewModelScope.launch(dispatchers.io){
+            _getMovieProvidersResponse.value = GetMovieProvidersEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = repository.getMovieProviders(movieId)){
+                    is Resource.Success -> {
+                        movieList.find { it.id == movieId }?.providers = response.data
+                        _getMovieProvidersResponse.value = GetMovieProvidersEvent.Success("Movie Providers Retrieved")
+                    }
+                    is Resource.Error -> _getMovieProvidersResponse.value = GetMovieProvidersEvent.Failure(response.message!!)
+                    is Resource.Exception -> _getMovieProvidersResponse.value = GetMovieProvidersEvent.Exception(response.message!!)
+                }
+            }else _getMovieProvidersResponse.value = GetMovieProvidersEvent.Failure("No internet connection")
         }
     }
 }

@@ -2,6 +2,7 @@ package com.example.moviehub.repository
 
 import com.example.moviehub.models.GenreModel
 import com.example.moviehub.models.ResultBody
+import com.example.moviehub.models.WatchProviderBody
 import com.example.moviehub.utils.Resource
 import okhttp3.ResponseBody
 
@@ -20,6 +21,8 @@ interface MediaRepository {
     suspend fun getTrendingMoviesByPage(page: Int): Resource<ResultBody>
 
     suspend fun getTrendingShowsByPage(page: Int): Resource<ResultBody>
+
+    suspend fun getMovieProviders(movieId: Int): Resource<WatchProviderBody>
 
     /***
      * Media api requests end

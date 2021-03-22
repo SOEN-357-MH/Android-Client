@@ -2,6 +2,7 @@ package com.example.moviehub.retrofit
 
 import com.example.moviehub.models.GenreModel
 import com.example.moviehub.models.ResultBody
+import com.example.moviehub.models.WatchProviderBody
 import okhttp3.ResponseBody
 import retrofit2.Response
 import retrofit2.http.GET
@@ -28,6 +29,9 @@ interface MediaApiService {
 
     @GET("media/trending/show/{page}")
     suspend fun getTrendingShowsByPage(@Path("page") page: Int): Response<ResultBody>
+
+    @GET("media/movie/{movieId}/provider")
+    suspend fun getMovieProviders(@Path("movieId") movieId: Int): Response<WatchProviderBody>
 
     @GET("media/discover/movie")
     suspend fun getMoviesBasedOnFilter(@Query("page") page: Int, @Query("with_watch_providers")providers: String, @Query("with_genres")genres: String): Response<ResultBody>
