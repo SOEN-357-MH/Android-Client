@@ -1,5 +1,6 @@
 package com.example.moviehub.fragments
 
+import android.app.ActivityOptions
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -151,6 +152,8 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
 
         val action = HomeFragmentDirections.actionHomeFragmentToMovieDetailsFragment(mediaBody)
         Navigation.findNavController(binding.root).navigate(action)
+
+
 
     }
 
