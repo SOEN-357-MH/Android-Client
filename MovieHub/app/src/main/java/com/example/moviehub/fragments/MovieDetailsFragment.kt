@@ -37,9 +37,13 @@ class MovieDetailsFragment : Fragment() {
         binding.mriMovieImage.load(args.mediaBody.poster_path)
         binding.backdropIMG.load(args.mediaBody.backdrop_path)
         binding.dTitle.text = args.mediaBody.title
-        binding.dStreamingService.text = args.mediaBody.providers?.results?.CA!!.flatrate[0].provider_name
-        binding.dStreamingLogo.load(args.mediaBody.providers?.results?.CA!!.flatrate[0].logo_path)
 
+        args.mediaBody.providers?.results?.let {
+            it.CA?.flatrate?.let { providers ->
+                binding.dStreamingService.text = args.mediaBody.providers?.results?.CA?.flatrate!![0].provider_name
+                binding.dStreamingLogo.load(args.mediaBody.providers?.results?.CA?.flatrate!![0].logo_path)
+            }
+        }
 
         // Inflate the layout for this fragment
         return binding.root
