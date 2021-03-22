@@ -1,6 +1,8 @@
 package com.example.moviehub.repository
 
+import com.example.moviehub.models.GenreModel
 import com.example.moviehub.models.ResultBody
+import com.example.moviehub.models.WatchProviderBody
 import com.example.moviehub.retrofit.MediaApiService
 import com.example.moviehub.utils.Resource
 import okhttp3.ResponseBody
@@ -24,9 +26,22 @@ class DefaultMediaRepository @Inject constructor(
         }
     }
 
-    override suspend fun getImageSize(): Resource<ResponseBody> {
+    override suspend fun getImageSizes(): Resource<ArrayList<String>> {
         return try {
-            val response = api.getImageSize()
+            val response = api.getImageSizes()
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!, null)
+            }else {
+                Resource.Error(response.message())
+            }
+        } catch (e: Exception){
+            Resource.Exception(e.message ?: "An error occurred")
+        }
+    }
+
+    override suspend fun getMovieGenres(): Resource<GenreModel> {
+        return try {
+            val response = api.getMovieGenres()
             if(response.isSuccessful){
                 Resource.Success(response.body()!!, null)
             }else {
@@ -53,6 +68,19 @@ class DefaultMediaRepository @Inject constructor(
     override suspend fun getTrendingShowsByPage(page: Int): Resource<ResultBody> {
         return try {
             val response = api.getTrendingShowsByPage(page)
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!, null)
+            }else {
+                Resource.Error(response.message())
+            }
+        } catch (e: Exception){
+            Resource.Exception(e.message ?: "An error occurred")
+        }
+    }
+
+    override suspend fun getMovieProviders(movieId: Int): Resource<WatchProviderBody> {
+        return try {
+            val response = api.getMovieProviders(movieId)
             if(response.isSuccessful){
                 Resource.Success(response.body()!!, null)
             }else {

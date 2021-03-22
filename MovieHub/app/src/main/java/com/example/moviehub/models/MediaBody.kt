@@ -19,5 +19,6 @@ data class MediaBody(
     val origin_country: ArrayList<String>,
     val name: String,
     val first_air_date: String,
-    val genres: ArrayList<String>
+    val genres: ArrayList<String>,
+    var providers: WatchProviderBody?
 ) : Parcelable

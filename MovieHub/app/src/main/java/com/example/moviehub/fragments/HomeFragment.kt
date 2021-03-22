@@ -24,6 +24,7 @@ import com.example.moviehub.models.MediaBody
 import com.example.moviehub.viewModels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -43,7 +44,12 @@ class HomeFragment : Fragment(){
         observeTrendingMoviesByPage()
         observeTrendingShowsByPage()
         observeBaseImageUrl()
-        observeImageSize()
+        observeImageSizes()
+        observeMovieGenres()
+        observeMovieProviders()
+
+        viewModel.getBaseImageUrl()
+        viewModel.getMovieGenres()
     }
 
     override fun onCreateView(
@@ -52,10 +58,9 @@ class HomeFragment : Fragment(){
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater,container,false)
 
-        viewModel.getBaseImageUrl()
-
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(activity)
-        //binding.homeRecyclerView.adapter = mainRecyclerAdapter
+        binding.homeRecyclerView.adapter = mainRecyclerAdapter
+        binding.homeRecyclerView.setHasFixedSize(true)
 
 
         return binding.root
@@ -67,7 +72,8 @@ class HomeFragment : Fragment(){
                 when(event){
                     is HomeViewModel.GetTrendingMoviesByPageEvent.Success -> {
                         for (movie in viewModel.movieList) {
-                            movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSize}${movie.poster_path}"
+                            movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.poster_path}"
+                            viewModel.getMovieProviders(movie.id)
                         }
                         categoryList.add(AllCategory("Trending Movies", viewModel.movieList))
                         viewModel.getTrendingShowsByPage(1)
@@ -90,7 +96,7 @@ class HomeFragment : Fragment(){
                 when(event){
                     is HomeViewModel.GetTrendingShowsByPageEvent.Success -> {
                         for(show in viewModel.showList){
-                            show.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSize}${show.poster_path}"
+                            show.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.poster_path}"
                             show.title = show.name
                         }
                         categoryList.add(AllCategory("Trending Shows", viewModel.showList))
@@ -120,7 +126,7 @@ class HomeFragment : Fragment(){
                 when(event){
                     is HomeViewModel.GetBaseImageUrlEvent.Success -> {
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
-                        viewModel.getImageSize()
+                        viewModel.getImageSizes()
                     }
                     is HomeViewModel.GetBaseImageUrlEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
                     is HomeViewModel.GetBaseImageUrlEvent.Loading -> {
@@ -133,19 +139,58 @@ class HomeFragment : Fragment(){
         }
     }
 
-    private fun observeImageSize() {
+    private fun observeImageSizes() {
         lifecycleScope.launchWhenStarted {
             viewModel.getImageSizeResponse.collect { event ->
                 when(event){
-                    is HomeViewModel.GetImageSizeEvent.Success -> {
+                    is HomeViewModel.GetImageSizesEvent.Success -> {
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                         viewModel.getTrendingMoviesByPage(1)
                     }
-                    is HomeViewModel.GetImageSizeEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
-                    is HomeViewModel.GetImageSizeEvent.Loading -> {
+                    is HomeViewModel.GetImageSizesEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetImageSizesEvent.Loading -> {
 
                     }
-                    is HomeViewModel.GetImageSizeEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetImageSizesEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeMovieGenres(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.getMovieGenresResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.GetMovieGenresEvent.Success -> {
+                        Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
+                    }
+                    is HomeViewModel.GetMovieGenresEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetMovieGenresEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.GetMovieGenresEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeMovieProviders() {
+        lifecycleScope.launchWhenStarted {
+            viewModel.getMovieProvidersResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.GetMovieProvidersEvent.Success -> {
+//                        viewModel.movieProvidersList[viewModel.movieProvidersList.size - 1]?.let {
+//                            Timber.d("${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${viewModel.movieProvidersList[viewModel.movieProvidersList.size - 1]?.results?.CA!!.rent[0].logo_path}")
+//                            binding.imageView.load( "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${viewModel.movieProvidersList[viewModel.movieProvidersList.size - 1]?.results?.CA!!.rent[0].logo_path}")
+//                        }
+                    }
+                    is HomeViewModel.GetMovieProvidersEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetMovieProvidersEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.GetMovieProvidersEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
                     else -> Unit
                 }
             }
