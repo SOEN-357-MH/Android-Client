@@ -60,10 +60,10 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
             viewModel.getTrendingMoviesByPageResponse.collect { event ->
                 when(event){
                     is HomeViewModel.GetTrendingMoviesByPageEvent.Success -> {
-                        for(movie in viewModel.movieList!!){
+                        for (movie in viewModel.movieList) {
                             movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSize}${movie.poster_path}"
                         }
-                        categoryList.add(AllCategory("Trending Movies", viewModel.movieList!!))
+                        categoryList.add(AllCategory("Trending Movies", viewModel.movieList))
                         viewModel.getTrendingShowsByPage(1)
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
@@ -83,11 +83,11 @@ class HomeFragment : Fragment(), MovieItemAdapter.ClickMediaListener {
             viewModel.getTrendingShowsByPageResponse.collect { event ->
                 when(event){
                     is HomeViewModel.GetTrendingShowsByPageEvent.Success -> {
-                        for(show in viewModel.showList!!){
+                        for(show in viewModel.showList){
                             show.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSize}${show.poster_path}"
                             show.title = show.name
                         }
-                        categoryList.add(AllCategory("Trending Shows", viewModel.showList!!))
+                        categoryList.add(AllCategory("Trending Shows", viewModel.showList))
                         mainRecyclerAdapter = MainRecyclerAdapter(requireContext(),this@HomeFragment , categoryList)
                         binding.homeRecyclerView.adapter = mainRecyclerAdapter
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()

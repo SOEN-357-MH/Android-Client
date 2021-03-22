@@ -68,10 +68,11 @@ class HomeViewModel @Inject constructor(
     private val _getImageSizeResponse = MutableStateFlow<GetImageSizeEvent>(GetImageSizeEvent.Empty)
     val getImageSizeResponse: StateFlow<GetImageSizeEvent> = _getImageSizeResponse
 
-    var movieList: ArrayList<MediaBody>? = null
-    var showList: ArrayList<MediaBody>? = null
+    var movieList = arrayListOf<MediaBody>()
+    var showList = arrayListOf<MediaBody>()
     var baseImageUrl: String? = null
     var imageSize: String? = null
+    var pageCounter = 1
 
     fun getTrendingMoviesByPage(page: Int){
         viewModelScope.launch(dispatchers.io){
@@ -79,7 +80,7 @@ class HomeViewModel @Inject constructor(
             if(networkHelper.isNetworkConnected()){
                 when(val response = repository.getTrendingMoviesByPage(page)){
                     is Resource.Success -> {
-                        movieList = response.data?.results
+                        movieList = response.data!!.results
                         _getTrendingMoviesByPageResponse.value = GetTrendingMoviesByPageEvent.Success("Trending Movies Retrieved")
                     }
                     is Resource.Error -> _getTrendingMoviesByPageResponse.value = GetTrendingMoviesByPageEvent.Failure(response.message!!)
@@ -95,7 +96,7 @@ class HomeViewModel @Inject constructor(
             if(networkHelper.isNetworkConnected()){
                 when(val response = repository.getTrendingShowsByPage(page)){
                     is Resource.Success -> {
-                        showList = response.data?.results
+                        showList = response.data!!.results
                         _getTrendingShowsByPageResponse.value = GetTrendingShowsByPageEvent.Success("Trending Shows Retrieved")
                     }
                     is Resource.Error -> _getTrendingShowsByPageResponse.value = GetTrendingShowsByPageEvent.Failure(response.message!!)
