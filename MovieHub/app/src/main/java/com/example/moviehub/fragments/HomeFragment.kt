@@ -27,7 +27,7 @@ class HomeFragment : Fragment(){
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by activityViewModels()
+    private val viewModel: HomeViewModel by viewModels()
 
     private var mainRecyclerAdapter : MainRecyclerAdapter? = null
     private val categoryMovieList: ArrayList<AllCategory> = ArrayList()
@@ -35,6 +35,12 @@ class HomeFragment : Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        Timber.d("on create")
+        viewModel.clearItem()
+        categoryMovieList.clear()
+        categoryShowList.clear()
+        mainRecyclerAdapter = null
 
         observeTrendingMoviesByPage()
         observeTrendingShowsByPage()
@@ -45,11 +51,8 @@ class HomeFragment : Fragment(){
         observeShowProviders()
         observeDiscoverMovie()
 
-        if(viewModel.firstSelected) {
-            viewModel.firstSelected = false
-            viewModel.getBaseImageUrl()
-            viewModel.getMovieGenres()
-        }
+        viewModel.getBaseImageUrl()
+        viewModel.getMovieGenres()
     }
 
     override fun onCreateView(
@@ -60,7 +63,7 @@ class HomeFragment : Fragment(){
 
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        binding.tabLayout.getTabAt(viewModel.selectedTab)?.select()
+        binding.homeTabLayout.getTabAt(viewModel.selectedTab)?.select()
 
         return binding.root
     }
@@ -90,7 +93,7 @@ class HomeFragment : Fragment(){
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-            mainRecyclerAdapter?.stateRestorationPolicy= RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+        mainRecyclerAdapter?.stateRestorationPolicy= RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.homeRecyclerView.adapter = mainRecyclerAdapter
 
 
