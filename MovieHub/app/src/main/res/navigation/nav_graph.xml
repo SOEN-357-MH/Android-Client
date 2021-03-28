@@ -20,13 +20,13 @@
             app:destination="@id/registerFragment" />
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            app:destination="@id/Home" />
         <action
             android:id="@+id/action_loginFragment_to_movieTinderFragment"
-            app:destination="@id/movieTinderFragment" />
+            app:destination="@id/Discover" />
     </fragment>
     <fragment
-        android:id="@+id/homeFragment"
+        android:id="@+id/Home"
         android:name="com.example.moviehub.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
@@ -35,7 +35,7 @@
             app:destination="@id/movieDetailsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/movieTinderFragment"
+        android:id="@+id/Discover"
         android:name="com.example.moviehub.fragments.MovieTinderFragment"
         android:label="fragment_movie_tinder"
         tools:layout="@layout/fragment_movie_tinder" />
@@ -49,7 +49,7 @@
             app:argType="com.example.moviehub.models.MediaBody" />
     </fragment>
     <fragment
-        android:id="@+id/movieListFragment"
+        android:id="@+id/List"
         android:name="com.example.moviehub.fragments.MovieListFragment"
         android:label="fragment_movie_list"
         tools:layout="@layout/fragment_movie_list" />

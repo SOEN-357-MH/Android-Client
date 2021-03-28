@@ -28,14 +28,10 @@ class MainActivity : AppCompatActivity() {
     private fun initNavigation(){
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostMain) as NavHostFragment
         navController = navHostFragment.navController
-
-        //  visibilityNavElements(navController)
+        visibilityNavElements(navController)
         binding.bottomNav.setupWithNavController(navController)
-
         binding.bottomNav.setOnNavigationItemReselectedListener {}
-
         val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
-
         navController.graph = navGraph
     }
 
@@ -47,9 +43,9 @@ class MainActivity : AppCompatActivity() {
     private fun visibilityNavElements(navController: NavController) {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when (destination.id) {
-                R.id.homeFragment,
-                R.id.movieTinderFragment,
-                R.id.movieListFragment -> binding.bottomNav.visibility = View.VISIBLE
+                R.id.Home,
+                R.id.Discover,
+                R.id.List -> binding.bottomNav.visibility = View.VISIBLE
                 else -> binding.bottomNav.visibility = View.GONE
             }
         }
