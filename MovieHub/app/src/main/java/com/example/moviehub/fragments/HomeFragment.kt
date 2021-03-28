@@ -14,6 +14,7 @@ import com.example.moviehub.adapters.MainRecyclerAdapter
 import com.example.moviehub.databinding.FragmentHomeBinding
 import com.example.moviehub.models.AllCategory
 import com.example.moviehub.viewModels.HomeViewModel
+import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 
@@ -60,13 +61,37 @@ class HomeFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        mainRecyclerAdapter?.stateRestorationPolicy= RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
+
+        binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab?.text) {
+                    "Movies" -> {
+                        //TODO : Put Movies
+                    }
+                    "TV Shows" -> {
+                        //TODO : Put TV Shows
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
+
+            mainRecyclerAdapter?.stateRestorationPolicy= RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.homeRecyclerView.adapter = mainRecyclerAdapter
+
+
+
         postponeEnterTransition()
+
         binding.homeRecyclerView.viewTreeObserver.addOnPreDrawListener {
             startPostponedEnterTransition()
             true
         }
+
+
     }
 
     private fun observeTrendingMoviesByPage(){
