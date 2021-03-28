@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class MediaBody(
     val id: Int,
-    val release_date: String,
+    var release_date: String,
     val adult: Boolean,
     var backdrop_path: String,
     val genre_ids: ArrayList<Int>,

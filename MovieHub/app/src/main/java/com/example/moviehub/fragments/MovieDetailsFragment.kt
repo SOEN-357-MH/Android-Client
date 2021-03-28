@@ -41,6 +41,23 @@ class MovieDetailsFragment : Fragment() {
         binding.mriMovieImage.load(args.mediaBody.poster_path)
         binding.backdropIMG.load(args.mediaBody.backdrop_path)
         binding.dTitle.text = args.mediaBody.title
+        binding.dDesciption.text = args.mediaBody.overview
+
+        if (args.mediaBody.adult){
+            binding.dAdult.visibility = View.VISIBLE
+        } else {
+            binding.dAdult.visibility = View.GONE
+        }
+
+        var genres = "Genres: "
+        for (item in args.mediaBody.genres){
+            genres = "$genres$item, "
+        }
+
+
+        binding.dReleaseDate.text = "Release Date: ${args.mediaBody.release_date}"
+
+        binding.dGenres.text = genres
 
         args.mediaBody.providers?.results?.let {
             it.CA?.flatrate?.let { providers ->
@@ -48,7 +65,10 @@ class MovieDetailsFragment : Fragment() {
                 binding.dLogosRV.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
                 binding.dLogosRV.adapter = logoAdapter
             }
-        }
+        } ?: fun() {
+           binding.dNoStream.visibility = View.VISIBLE
+        }()
+
 
         // Inflate the layout for this fragment
         return binding.root

@@ -9,17 +9,22 @@ import com.example.moviehub.databinding.MovieRecyclerRowItemBinding
 import com.example.moviehub.models.AllCategory
 
 
+
 class MainRecyclerAdapter(
     private val context: Context,
     private val allCategory: ArrayList<AllCategory>) :
     RecyclerView.Adapter<MainRecyclerAdapter.MainViewHolder>() {
 
+    private var movieItemAdapter: MovieItemAdapter? = null
+
     inner class MainViewHolder(val binding: MovieRecyclerRowItemBinding): RecyclerView.ViewHolder(binding.root){
 
         fun bind(categoryItem: AllCategory){
+            movieItemAdapter = MovieItemAdapter(categoryItem.movieItems)
             binding.mrCategoryTitle.text = categoryItem.categoryTitle
+            movieItemAdapter?.stateRestorationPolicy= StateRestorationPolicy.PREVENT_WHEN_EMPTY
             binding.mrMovieRecyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.HORIZONTAL, false)
-            binding.mrMovieRecyclerView.adapter = MovieItemAdapter(categoryItem.movieItems)
+            binding.mrMovieRecyclerView.adapter = movieItemAdapter
             binding.mrMovieRecyclerView.hasFixedSize()
         }
     }
