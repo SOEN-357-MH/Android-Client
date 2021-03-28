@@ -39,6 +39,7 @@ class HomeFragment : Fragment(){
         observeMovieGenres()
         observeMovieProviders()
         observeShowProviders()
+        observeDiscoverMovie()
 
         viewModel.getBaseImageUrl()
         viewModel.getMovieGenres()
@@ -206,6 +207,24 @@ class HomeFragment : Fragment(){
 
                     }
                     is HomeViewModel.GetShowProvidersEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeDiscoverMovie(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.discoverMovieResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.DiscoverMovieEvent.Success -> {
+
+                    }
+                    is HomeViewModel.DiscoverMovieEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.DiscoverMovieEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.DiscoverMovieEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
                     else -> Unit
                 }
             }

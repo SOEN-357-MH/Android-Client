@@ -103,4 +103,21 @@ class DefaultMediaRepository @Inject constructor(
             Resource.Exception(e.message ?: "An error occurred")
         }
     }
+
+    override suspend fun getMoviesBasedOnFilter(
+        page: Int,
+        providers: String,
+        genres: String
+    ): Resource<ResultBody> {
+        return try {
+            val response = api.getMoviesBasedOnFilter(page, providers, genres)
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!, null)
+            }else {
+                Resource.Error(response.message())
+            }
+        } catch (e: Exception){
+            Resource.Exception(e.message ?: "An error occurred")
+        }
+    }
 }

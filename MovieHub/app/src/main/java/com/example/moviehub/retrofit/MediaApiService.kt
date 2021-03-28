@@ -36,7 +36,6 @@ interface MediaApiService {
     @GET("media/show/{showId}/provider")
     suspend fun getShowProviders(@Path("showId")showId: Int): Response<WatchProviderBody>
 
-
     @GET("media/discover/movie")
     suspend fun getMoviesBasedOnFilter(@Query("page") page: Int, @Query("with_watch_providers")providers: String, @Query("with_genres")genres: String): Response<ResultBody>
 
