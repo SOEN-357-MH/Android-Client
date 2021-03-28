@@ -57,7 +57,7 @@ class HomeFragment : Fragment(){
 
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        binding.tabLayout.getTabAt(viewModel.selectedTab)?.select()
+        binding.homeTabLayout.getTabAt(viewModel.selectedTab)?.select()
 
         return binding.root
     }
