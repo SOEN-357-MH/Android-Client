@@ -82,6 +82,14 @@ class HomeViewModel @Inject constructor(
         object Empty: GetShowProvidersEvent()
     }
 
+    sealed class DiscoverMovieEvent {
+        class Success(val resultText: String): DiscoverMovieEvent()
+        class Failure(val errorText: String): DiscoverMovieEvent()
+        class Exception(val exceptionText: String): DiscoverMovieEvent()
+        object Loading: DiscoverMovieEvent()
+        object Empty: DiscoverMovieEvent()
+    }
+
     private val _getTrendingMoviesByPageResponse = MutableStateFlow<GetTrendingMoviesByPageEvent>(GetTrendingMoviesByPageEvent.Empty)
     val getTrendingMoviesByPageResponse: StateFlow<GetTrendingMoviesByPageEvent> = _getTrendingMoviesByPageResponse
 
@@ -103,12 +111,16 @@ class HomeViewModel @Inject constructor(
     private val _getShowProvidersResponse = MutableStateFlow<GetShowProvidersEvent>(GetShowProvidersEvent.Empty)
     val getShowProvidersResponse: StateFlow<GetShowProvidersEvent> = _getShowProvidersResponse
 
+    private val _discoverMovieResponse = MutableStateFlow<DiscoverMovieEvent>(DiscoverMovieEvent.Empty)
+    val discoverMovieResponse: StateFlow<DiscoverMovieEvent> = _discoverMovieResponse
+
     var movieList = arrayListOf<MediaBody>()
     var showList = arrayListOf<MediaBody>()
     var baseImageUrl: String? = null
     var imageSizes = arrayListOf<String>()
     var pageCounter = 1
     var movieGenres: GenreModel? = null
+    var selectedTab = 0
 
     fun getTrendingMoviesByPage(page: Int){
         viewModelScope.launch(dispatchers.io){
@@ -233,6 +245,21 @@ class HomeViewModel @Inject constructor(
                     is Resource.Exception -> _getShowProvidersResponse.value = GetShowProvidersEvent.Exception(response.message!!)
                 }
             }else _getShowProvidersResponse.value = GetShowProvidersEvent.Failure("No internet connection")
+        }
+    }
+
+    fun discoverMovie(page: Int, providers: String, genres: String){
+        viewModelScope.launch(dispatchers.io){
+            _discoverMovieResponse.value = DiscoverMovieEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = repository.getMoviesBasedOnFilter(page, providers, genres)){
+                    is Resource.Success -> {
+                        _discoverMovieResponse.value = DiscoverMovieEvent.Success("Discovered Movies")
+                    }
+                    is Resource.Error -> _discoverMovieResponse.value = DiscoverMovieEvent.Failure(response.message!!)
+                    is Resource.Exception -> _discoverMovieResponse.value = DiscoverMovieEvent.Exception(response.message!!)
+                }
+            }else _discoverMovieResponse.value = DiscoverMovieEvent.Failure("No internet connection")
         }
     }
 }

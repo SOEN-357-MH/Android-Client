@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ import com.example.moviehub.viewModels.HomeViewModel
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
+import timber.log.Timber
 
 
 @AndroidEntryPoint
@@ -25,10 +27,11 @@ class HomeFragment : Fragment(){
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: HomeViewModel by viewModels()
+    private val viewModel: HomeViewModel by activityViewModels()
 
     private var mainRecyclerAdapter : MainRecyclerAdapter? = null
-    private val categoryList: ArrayList<AllCategory> = ArrayList()
+    private val categoryMovieList: ArrayList<AllCategory> = ArrayList()
+    private val categoryShowList: ArrayList<AllCategory> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,6 +43,7 @@ class HomeFragment : Fragment(){
         observeMovieGenres()
         observeMovieProviders()
         observeShowProviders()
+        observeDiscoverMovie()
 
         viewModel.getBaseImageUrl()
         viewModel.getMovieGenres()
@@ -53,7 +57,7 @@ class HomeFragment : Fragment(){
 
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-
+        binding.tabLayout.getTabAt(viewModel.selectedTab)?.select()
 
         return binding.root
     }
@@ -66,10 +70,15 @@ class HomeFragment : Fragment(){
             override fun onTabSelected(tab: TabLayout.Tab?) {
                 when (tab?.text) {
                     "Movies" -> {
-                        //TODO : Put Movies
+                        Timber.d("movie selected")
+                        viewModel.selectedTab = 0
+                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryMovieList)
+                        binding.homeRecyclerView.adapter = mainRecyclerAdapter
                     }
                     "TV Shows" -> {
-                        //TODO : Put TV Shows
+                        viewModel.selectedTab = 1
+                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryShowList)
+                        binding.homeRecyclerView.adapter = mainRecyclerAdapter
                     }
                 }
             }
@@ -103,7 +112,9 @@ class HomeFragment : Fragment(){
                             movie.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.backdrop_path}"
                             viewModel.getMovieProviders(movie.id)
                         }
-                        categoryList.add(AllCategory("Trending Movies", viewModel.movieList))
+                        categoryMovieList.add(AllCategory("Trending Movies", viewModel.movieList))
+                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryMovieList)
+                        binding.homeRecyclerView.adapter = mainRecyclerAdapter
                         viewModel.getTrendingShowsByPage(1)
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
@@ -130,9 +141,9 @@ class HomeFragment : Fragment(){
                             show.release_date = show.first_air_date
                             viewModel.getShowProviders(show.id)
                         }
-                        categoryList.add(AllCategory("Trending Shows", viewModel.showList))
-                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryList)
-                        binding.homeRecyclerView.adapter = mainRecyclerAdapter
+                        categoryShowList.add(AllCategory("Trending Shows", viewModel.showList))
+//                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryShowList)
+//                        binding.homeRecyclerView.adapter = mainRecyclerAdapter
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
                     is HomeViewModel.GetTrendingShowsByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
@@ -231,6 +242,24 @@ class HomeFragment : Fragment(){
 
                     }
                     is HomeViewModel.GetShowProvidersEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeDiscoverMovie(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.discoverMovieResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.DiscoverMovieEvent.Success -> {
+
+                    }
+                    is HomeViewModel.DiscoverMovieEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.DiscoverMovieEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.DiscoverMovieEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
                     else -> Unit
                 }
             }

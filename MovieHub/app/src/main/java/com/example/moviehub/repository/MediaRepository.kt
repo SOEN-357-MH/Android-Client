@@ -26,6 +26,9 @@ interface MediaRepository {
 
     suspend fun getShowProviders(showId: Int): Resource<WatchProviderBody>
 
+    suspend fun getMoviesBasedOnFilter(page: Int, providers: String, genres: String): Resource<ResultBody>
+
+
     /***
      * Media api requests end
      */
