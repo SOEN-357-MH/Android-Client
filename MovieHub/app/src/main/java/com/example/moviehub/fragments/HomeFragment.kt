@@ -45,8 +45,11 @@ class HomeFragment : Fragment(){
         observeShowProviders()
         observeDiscoverMovie()
 
-        viewModel.getBaseImageUrl()
-        viewModel.getMovieGenres()
+        if(viewModel.firstSelected) {
+            viewModel.firstSelected = false
+            viewModel.getBaseImageUrl()
+            viewModel.getMovieGenres()
+        }
     }
 
     override fun onCreateView(

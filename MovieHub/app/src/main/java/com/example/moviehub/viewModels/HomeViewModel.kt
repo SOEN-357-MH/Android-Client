@@ -121,6 +121,7 @@ class HomeViewModel @Inject constructor(
     var pageCounter = 1
     var movieGenres: GenreModel? = null
     var selectedTab = 0
+    var firstSelected = true
 
     fun getTrendingMoviesByPage(page: Int){
         viewModelScope.launch(dispatchers.io){
