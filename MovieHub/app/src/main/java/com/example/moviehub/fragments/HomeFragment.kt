@@ -15,6 +15,7 @@ import com.example.moviehub.adapters.MainRecyclerAdapter
 import com.example.moviehub.databinding.FragmentHomeBinding
 import com.example.moviehub.models.AllCategory
 import com.example.moviehub.viewModels.HomeViewModel
+import com.example.moviehub.viewModels.SharedViewModel
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
@@ -28,6 +29,7 @@ class HomeFragment : Fragment(){
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModels()
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private var mainRecyclerAdapter : MainRecyclerAdapter? = null
     private val categoryMovieList: ArrayList<AllCategory> = ArrayList()
@@ -35,12 +37,6 @@ class HomeFragment : Fragment(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        Timber.d("on create")
-        viewModel.clearItem()
-        categoryMovieList.clear()
-        categoryShowList.clear()
-        mainRecyclerAdapter = null
 
         observeTrendingMoviesByPage()
         observeTrendingShowsByPage()
@@ -113,6 +109,7 @@ class HomeFragment : Fragment(){
             viewModel.getTrendingMoviesByPageResponse.collect { event ->
                 when(event){
                     is HomeViewModel.GetTrendingMoviesByPageEvent.Success -> {
+                        sharedViewModel.movieList = viewModel.movieList
                         for (movie in viewModel.movieList) {
                             movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.poster_path}"
                             movie.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.backdrop_path}"

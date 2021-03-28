@@ -122,15 +122,6 @@ class HomeViewModel @Inject constructor(
     var movieGenres: GenreModel? = null
     var selectedTab = 0
 
-    fun clearItem(){
-        movieList.clear()
-        showList.clear()
-        baseImageUrl = null
-        imageSizes.clear()
-        movieGenres = null
-        selectedTab = 0
-    }
-
     fun getTrendingMoviesByPage(page: Int){
         viewModelScope.launch(dispatchers.io){
             _getTrendingMoviesByPageResponse.value = GetTrendingMoviesByPageEvent.Loading

@@ -8,10 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import com.example.moviehub.R
 import com.example.moviehub.databinding.FragmentMovieTinderBinding
+import com.example.moviehub.viewModels.SharedViewModel
 import com.lorentzos.flingswipe.SwipeFlingAdapterView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MovieTinderFragment : Fragment() {
@@ -24,7 +27,7 @@ class MovieTinderFragment : Fragment() {
     private var arrayAdapter: ArrayAdapter<String>? = null
     private var i = 0
 
-
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +35,8 @@ class MovieTinderFragment : Fragment() {
         al.add("c")
         al.add("python")
         al.add("java")
+
+        Timber.d("share ${sharedViewModel.movieList}")
 
 
         //choose your favorite adapter
