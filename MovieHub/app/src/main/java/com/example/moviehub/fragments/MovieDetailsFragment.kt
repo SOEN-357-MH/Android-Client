@@ -44,7 +44,7 @@ class MovieDetailsFragment : Fragment() {
 
         args.mediaBody.providers?.results?.let {
             it.CA?.flatrate?.let { providers ->
-                logoAdapter = DetailsLogoAdapter(args.mediaBody.providers?.results?.CA?.flatrate!!)
+                logoAdapter = DetailsLogoAdapter(providers)
                 binding.dLogosRV.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
                 binding.dLogosRV.adapter = logoAdapter
             }
