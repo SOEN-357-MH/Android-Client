@@ -120,6 +120,7 @@ class HomeViewModel @Inject constructor(
     var imageSizes = arrayListOf<String>()
     var pageCounter = 1
     var movieGenres: GenreModel? = null
+    var selectedTab = 0
 
     fun getTrendingMoviesByPage(page: Int){
         viewModelScope.launch(dispatchers.io){
