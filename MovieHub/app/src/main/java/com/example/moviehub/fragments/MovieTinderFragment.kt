@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.example.moviehub.R
+import com.example.moviehub.adapters.MovieTinderAdapter
 import com.example.moviehub.databinding.FragmentMovieTinderBinding
 import com.example.moviehub.viewModels.SharedViewModel
 import com.lorentzos.flingswipe.SwipeFlingAdapterView
@@ -23,24 +24,18 @@ class MovieTinderFragment : Fragment() {
     private val binding get() = _binding!!
 
 
-    private var al = ArrayList<String>()
-    private var arrayAdapter: ArrayAdapter<String>? = null
+    private var movieArray = ArrayList<MediaBody>()
+    private var arrayAdapter: MovieTinderAdapter? = null
     private var i = 0
 
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        al.add("php")
-        al.add("c")
-        al.add("python")
-        al.add("java")
 
         Timber.d("share ${sharedViewModel.movieList}")
 
-
-        //choose your favorite adapter
-        arrayAdapter = ArrayAdapter(requireContext(), R.layout.movie_tinder_item, R.id.mtMovieName, al)
+        arrayAdapter = MovieTinderAdapter(requireContext(),R.layout.movie_tinder_item, movieArray)
 
 
     }
@@ -57,7 +52,7 @@ class MovieTinderFragment : Fragment() {
             override fun removeFirstObjectInAdapter() {
                 // this is the simplest way to delete an object from the Adapter (/AdapterView)
                 Log.d("LIST", "removed object!")
-                al.removeAt(0)
+
                 arrayAdapter?.notifyDataSetChanged()
             }
 
@@ -74,7 +69,7 @@ class MovieTinderFragment : Fragment() {
 
             override fun onAdapterAboutToEmpty(p0: Int) {
                 // Ask for more data here
-                al.add("XML $i")
+
                 arrayAdapter?.notifyDataSetChanged()
                 Log.d("LIST", "notified")
                 i++
