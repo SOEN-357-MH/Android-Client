@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:icon="@drawable/home_icon"
+        android:title="Home"
+        android:id="@+id/Home"/>
+    <item
+        android:icon="@drawable/tinder_logo"
+        android:title="Discover"
+        android:id="@+id/Discover"/>
+    <item
+        android:icon="@drawable/movie_list_icon"
+        android:title="List"
+        android:id="@+id/List"/>
+</menu>
