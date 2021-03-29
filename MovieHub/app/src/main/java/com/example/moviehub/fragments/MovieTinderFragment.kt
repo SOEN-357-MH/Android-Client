@@ -8,10 +8,15 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.fragment.app.activityViewModels
 import com.example.moviehub.R
+import com.example.moviehub.adapters.MovieTinderAdapter
 import com.example.moviehub.databinding.FragmentMovieTinderBinding
+import com.example.moviehub.models.MediaBody
+import com.example.moviehub.viewModels.SharedViewModel
 import com.lorentzos.flingswipe.SwipeFlingAdapterView
 import dagger.hilt.android.AndroidEntryPoint
+import timber.log.Timber
 
 @AndroidEntryPoint
 class MovieTinderFragment : Fragment() {
@@ -20,22 +25,18 @@ class MovieTinderFragment : Fragment() {
     private val binding get() = _binding!!
 
 
-    private var al = ArrayList<String>()
-    private var arrayAdapter: ArrayAdapter<String>? = null
-    private var i = 0
+    private var movieArray = mutableListOf<MediaBody>()
+    private var arrayAdapter: MovieTinderAdapter? = null
 
 
+    private val sharedViewModel: SharedViewModel by activityViewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        al.add("php")
-        al.add("c")
-        al.add("python")
-        al.add("java")
 
-
-        //choose your favorite adapter
-        arrayAdapter = ArrayAdapter(requireContext(), R.layout.movie_tinder_item, R.id.mtMovieName, al)
+        Timber.d("share ${sharedViewModel.movieList}")
+        movieArray = sharedViewModel.movieList
+        arrayAdapter = MovieTinderAdapter(requireContext(),R.layout.movie_tinder_item, movieArray)
 
 
     }
@@ -51,8 +52,7 @@ class MovieTinderFragment : Fragment() {
         binding.frame.setFlingListener(object : SwipeFlingAdapterView.onFlingListener {
             override fun removeFirstObjectInAdapter() {
                 // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                Log.d("LIST", "removed object!")
-                al.removeAt(0)
+                movieArray.removeAt(0)
                 arrayAdapter?.notifyDataSetChanged()
             }
 
@@ -69,10 +69,8 @@ class MovieTinderFragment : Fragment() {
 
             override fun onAdapterAboutToEmpty(p0: Int) {
                 // Ask for more data here
-                al.add("XML $i")
+                movieArray.addAll(sharedViewModel.movieList)
                 arrayAdapter?.notifyDataSetChanged()
-                Log.d("LIST", "notified")
-                i++
             }
 
             override fun onScroll(p0: Float) {

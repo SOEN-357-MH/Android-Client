@@ -69,9 +69,9 @@ dependencies {
     implementation "androidx.datastore:datastore-preferences:1.0.0-alpha08"
 
     // ViewModel
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
     // LiveData
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.3.1"
 
     //coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.2'
@@ -91,4 +91,11 @@ dependencies {
 
     //coil
     implementation("io.coil-kt:coil:1.1.1")
+
+    //Navigation Components
+    implementation "androidx.navigation:navigation-fragment-ktx:2.3.4"
+    implementation "androidx.navigation:navigation-ui-ktx:2.3.4"
+
+    //Restore Recycler View
+    implementation 'androidx.recyclerview:recyclerview:1.2.0-rc01'
 }

@@ -26,6 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
         <TextView
             android:id="@+id/mtMovieName"
             android:layout_width="match_parent"
@@ -62,7 +63,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/mtMovieImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="movieIMGplaceholder"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/placeholder_icon" />
+
     </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
