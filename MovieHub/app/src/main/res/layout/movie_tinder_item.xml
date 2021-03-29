@@ -6,13 +6,18 @@
     android:layout_height="match_parent"
     android:layout_gravity="center"
     android:clipToPadding="false"
-    android:outlineProvider="bounds">
+    android:outlineProvider="bounds"
+    android:paddingStart="40sp"
+    android:paddingTop="20sp"
+    android:paddingEnd="40sp"
+    android:paddingBottom="20sp">
 
 
     <androidx.cardview.widget.CardView
         android:id="@+id/mtCardView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="16dp"
         android:background="@color/md_white_1000"
         android:elevation="5dp"
         app:cardCornerRadius="5dp"
@@ -21,13 +26,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/mtMovieImage"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:contentDescription="movieIMGplaceholder"
-            android:scaleType="fitXY"
-            app:srcCompat="@drawable/placeholder_icon" />
 
         <TextView
             android:id="@+id/mtMovieName"
@@ -65,7 +63,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <ImageView
+            android:id="@+id/mtMovieImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="movieIMGplaceholder"
+            android:scaleType="fitXY"
+            app:srcCompat="@drawable/placeholder_icon" />
+
     </androidx.cardview.widget.CardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
+

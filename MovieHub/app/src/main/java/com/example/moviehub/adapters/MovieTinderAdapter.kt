@@ -10,7 +10,9 @@ import com.example.moviehub.databinding.MovieTinderItemBinding
 import com.example.moviehub.models.MediaBody
 
 
-class MovieTinderAdapter(context: Context?, resourceId: Int, items: ArrayList<MediaBody?>?) : ArrayAdapter<MediaBody?>(context!!, resourceId, items!!) {
+class MovieTinderAdapter(context: Context?, resourceId: Int, items: MutableList<MediaBody>?) : ArrayAdapter<MediaBody?>(context!!, resourceId,
+    items!! as List<MediaBody?>
+) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
 
