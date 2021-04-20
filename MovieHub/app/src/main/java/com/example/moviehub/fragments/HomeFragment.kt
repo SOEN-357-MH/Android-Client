@@ -40,9 +40,9 @@ class HomeFragment : Fragment(){
         super.onCreate(savedInstanceState)
 
         observeTrendingMoviesByPage()
-
-        observeGenreMoviesByPage()
         observeGenreShowsByPage()
+        observeGenreMoviesByPage()
+
 
         observeTrendingShowsByPage()
         observeBaseImageUrl()
@@ -159,7 +159,7 @@ class HomeFragment : Fragment(){
                                 //TODO:Need to map GENRE ID codes to Strings
                                 categoryMovieList.add(
                                     AllCategory(
-                                        key,
+                                        viewModel.movieGenreMap[key]!!,
                                         value as ArrayList<MediaBody>
                                     )
                                 )
@@ -208,7 +208,7 @@ class HomeFragment : Fragment(){
                                 //TODO:Need to map GENRE ID codes to Strings
                                 categoryShowList.add(
                                     AllCategory(
-                                        key,
+                                        viewModel.showGenreMap[key]!!,
                                         value as ArrayList<MediaBody>
                                     )
                                 )

@@ -139,9 +139,11 @@ class HomeViewModel @Inject constructor(
     var movieGenres: GenreModel? = null
     var selectedTab = 0
 
-    var comedyList = arrayListOf<MediaBody>()
     var listOfGenresMovies = hashMapOf<String, MutableList<MediaBody>>()
     var listOfGenresShows = hashMapOf<String, MutableList<MediaBody>>()
+
+    var movieGenreMap = hashMapOf<String, String>()
+    var showGenreMap = hashMapOf<String, String>()
 
 
 
@@ -163,6 +165,13 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getGenreMoviesByPage(page: Int, genre: String){
+
+        movieGenreMap["28"] = "Action Movies"
+        movieGenreMap["12"] = "Adventure Movies"
+        movieGenreMap["16"] = "Animation Movies"
+        movieGenreMap["35"] = "Comedy Movies"
+        movieGenreMap["80"] = "Crime Movies"
+
         viewModelScope.launch(dispatchers.io){
             _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Loading
             if(networkHelper.isNetworkConnected()){
@@ -179,6 +188,13 @@ class HomeViewModel @Inject constructor(
     }
 
     fun getGenreShowsByPage(page: Int, genre: String){
+
+        showGenreMap["10759"] = "Action Movies"
+        showGenreMap["16"] = "Animation Movies"
+        showGenreMap["35"] = "Comedy Movies"
+        showGenreMap["80"] = "Crime Movies"
+        showGenreMap["99"] = "Documentary Movies"
+
         viewModelScope.launch(dispatchers.io){
             _getGenreShowsByPageResponse.value = GetGenreShowsByPageEvent.Loading
             if(networkHelper.isNetworkConnected()){
