@@ -36,22 +36,21 @@ class LoginFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
 
-        loginUser("Slayer42069", "123456")
-
         binding.button.setOnClickListener{
+            loginUser("Slayer42069", "123456")
             val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
             Navigation.findNavController(binding.root).navigate(action)
         }
 
-        binding.homeFragBTN.setOnClickListener{
+        binding.loginButton.setOnClickListener{
             val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment()
             Navigation.findNavController(binding.root).navigate(action)
         }
 
-        binding.tinderBTN.setOnClickListener {
-            val action = LoginFragmentDirections.actionLoginFragmentToMovieTinderFragment()
-            Navigation.findNavController(binding.root).navigate(action)
-        }
+//        binding.tinderBTN.setOnClickListener {
+//            val action = LoginFragmentDirections.actionLoginFragmentToMovieTinderFragment()
+//            Navigation.findNavController(binding.root).navigate(action)
+//        }
 
 
         return binding.root

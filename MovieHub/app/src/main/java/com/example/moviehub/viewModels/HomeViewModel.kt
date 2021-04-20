@@ -3,6 +3,7 @@ package com.example.moviehub.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviehub.helpers.NetworkHelper
+import com.example.moviehub.models.AllCategory
 import com.example.moviehub.models.GenreModel
 import com.example.moviehub.models.MediaBody
 import com.example.moviehub.models.WatchProviderBody
@@ -32,6 +33,14 @@ class HomeViewModel @Inject constructor(
         class Exception(val exceptionText: String): GetTrendingMoviesByPageEvent()
         object Loading: GetTrendingMoviesByPageEvent()
         object Empty: GetTrendingMoviesByPageEvent()
+    }
+
+    sealed class GetGenreMoviesByPageEvent {
+        class Success(val resultText: String): GetGenreMoviesByPageEvent()
+        class Failure(val errorText: String): GetGenreMoviesByPageEvent()
+        class Exception(val exceptionText: String): GetGenreMoviesByPageEvent()
+        object Loading: GetGenreMoviesByPageEvent()
+        object Empty: GetGenreMoviesByPageEvent()
     }
 
     sealed class GetBaseImageUrlEvent {
@@ -93,6 +102,9 @@ class HomeViewModel @Inject constructor(
     private val _getTrendingMoviesByPageResponse = MutableStateFlow<GetTrendingMoviesByPageEvent>(GetTrendingMoviesByPageEvent.Empty)
     val getTrendingMoviesByPageResponse: StateFlow<GetTrendingMoviesByPageEvent> = _getTrendingMoviesByPageResponse
 
+    private val _getGenreMoviesByPageResponse = MutableStateFlow<GetGenreMoviesByPageEvent>(GetGenreMoviesByPageEvent.Empty)
+    val getGenreMoviesByPageResponse: StateFlow<GetGenreMoviesByPageEvent> = _getGenreMoviesByPageResponse
+
     private val _getTrendingShowsByPageResponse = MutableStateFlow<GetTrendingShowsByPageEvent>(GetTrendingShowsByPageEvent.Empty)
     val getTrendingShowsByPageResponse: StateFlow<GetTrendingShowsByPageEvent> = _getTrendingShowsByPageResponse
 
@@ -122,6 +134,12 @@ class HomeViewModel @Inject constructor(
     var movieGenres: GenreModel? = null
     var selectedTab = 0
 
+    var comedyList = arrayListOf<MediaBody>()
+    var listOfGenres = hashMapOf<String, MutableList<MediaBody>>()
+
+
+
+
     fun getTrendingMoviesByPage(page: Int){
         viewModelScope.launch(dispatchers.io){
             _getTrendingMoviesByPageResponse.value = GetTrendingMoviesByPageEvent.Loading
@@ -135,6 +153,22 @@ class HomeViewModel @Inject constructor(
                     is Resource.Exception -> _getTrendingMoviesByPageResponse.value = GetTrendingMoviesByPageEvent.Exception(response.message!!)
                 }
             }else _getTrendingMoviesByPageResponse.value = GetTrendingMoviesByPageEvent.Failure("No internet connection")
+        }
+    }
+
+    fun getGenreMoviesByPage(page: Int, genre: String){
+        viewModelScope.launch(dispatchers.io){
+            _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = repository.getGenreMoviesByPage(page, genre)){
+                    is Resource.Success -> {
+                        response.data?.let { listOfGenres.put(genre, it.results) }
+                        _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Success("Genre Movies Retrieved")
+                    }
+                    is Resource.Error -> _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Failure(response.message!!)
+                    is Resource.Exception -> _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Exception(response.message!!)
+                }
+            }else _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Failure("No internet connection")
         }
     }
 
@@ -216,6 +250,19 @@ class HomeViewModel @Inject constructor(
                                 }
                             }
                         }
+
+                        for ((key, value) in listOfGenres) {
+                            //FOR EVERY GENRE IN LIST OF GENRES
+                            value.find { it.id == movieId }?.providers = response.data
+                            value.find { it.id == movieId }?.providers?.results?.let {
+                                it.CA?.flatrate?.let { providers ->
+                                    for (provider in providers) {
+                                        provider.logo_path = "${baseImageUrl}${imageSizes[6]}${provider.logo_path}"
+                                    }
+                                }
+                            }
+                        }
+
                         _getMovieProvidersResponse.value = GetMovieProvidersEvent.Success("Movie Providers Retrieved")
                     }
                     is Resource.Error -> _getMovieProvidersResponse.value = GetMovieProvidersEvent.Failure(response.message!!)

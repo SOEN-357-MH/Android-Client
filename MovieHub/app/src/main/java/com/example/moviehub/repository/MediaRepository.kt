@@ -20,6 +20,8 @@ interface MediaRepository {
 
     suspend fun getTrendingMoviesByPage(page: Int): Resource<ResultBody>
 
+    suspend fun getGenreMoviesByPage(page: Int, genre: String): Resource<ResultBody>
+
     suspend fun getTrendingShowsByPage(page: Int): Resource<ResultBody>
 
     suspend fun getMovieProviders(movieId: Int): Resource<WatchProviderBody>

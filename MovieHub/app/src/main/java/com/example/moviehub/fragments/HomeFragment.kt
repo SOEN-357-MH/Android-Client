@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviehub.adapters.MainRecyclerAdapter
 import com.example.moviehub.databinding.FragmentHomeBinding
 import com.example.moviehub.models.AllCategory
+import com.example.moviehub.models.MediaBody
 import com.example.moviehub.viewModels.HomeViewModel
 import com.example.moviehub.viewModels.SharedViewModel
 import com.google.android.material.tabs.TabLayout
@@ -39,6 +40,9 @@ class HomeFragment : Fragment(){
         super.onCreate(savedInstanceState)
 
         observeTrendingMoviesByPage()
+
+        observeGenreMoviesByPage()
+
         observeTrendingShowsByPage()
         observeBaseImageUrl()
         observeImageSizes()
@@ -92,8 +96,6 @@ class HomeFragment : Fragment(){
         mainRecyclerAdapter?.stateRestorationPolicy= RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.homeRecyclerView.adapter = mainRecyclerAdapter
 
-
-
         postponeEnterTransition()
 
         binding.homeRecyclerView.viewTreeObserver.addOnPreDrawListener {
@@ -126,6 +128,42 @@ class HomeFragment : Fragment(){
 
                     }
                     is HomeViewModel.GetTrendingMoviesByPageEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeGenreMoviesByPage(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.getGenreMoviesByPageResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.GetGenreMoviesByPageEvent.Success -> {
+                        sharedViewModel.listOfGenres = viewModel.listOfGenres
+
+                        for ((key, value) in viewModel.listOfGenres) {
+                            //FOR EVERY GENRE IN LIST OF GENRES
+                            for (movie in value) {
+                                //FOR EVERY MOVIE IN THAT GENRE
+                                movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.poster_path}"
+                                movie.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.backdrop_path}"
+                                viewModel.getMovieProviders(movie.id)
+                            }
+
+                            //TODO: Need to map GENRE ID codes to Strings
+                            categoryMovieList.add(AllCategory(key, value as ArrayList<MediaBody>))
+                        }
+
+                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryMovieList)
+                        binding.homeRecyclerView.adapter = mainRecyclerAdapter
+                        //viewModel.getGenreShowsByPage(1)
+                        Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
+                    }
+                    is HomeViewModel.GetGenreMoviesByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetGenreMoviesByPageEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.GetGenreMoviesByPageEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
                     else -> Unit
                 }
             }
@@ -186,6 +224,12 @@ class HomeFragment : Fragment(){
                     is HomeViewModel.GetImageSizesEvent.Success -> {
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                         viewModel.getTrendingMoviesByPage(1)
+                        viewModel.getGenreMoviesByPage(15, "35")
+                        viewModel.getGenreMoviesByPage(15, "28")
+                        viewModel.getGenreMoviesByPage(15, "12")
+                        viewModel.getGenreMoviesByPage(15, "16")
+                        viewModel.getGenreMoviesByPage(15, "80")
+
                     }
                     is HomeViewModel.GetImageSizesEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
                     is HomeViewModel.GetImageSizesEvent.Loading -> {
