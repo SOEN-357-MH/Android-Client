@@ -159,6 +159,7 @@
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="0dp"
+        android:id="@+id/cardview"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="4dp"
@@ -184,5 +185,18 @@
             android:textSize="12sp"
             android:typeface="normal" />
     </com.google.android.material.card.MaterialCardView>
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/button_background_red"
+        android:text="Add to Watchlist"
+        android:textSize="10sp"
+        android:textColor="@color/md_white_1000"
+        app:layout_constraintTop_toBottomOf="@id/cardview"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

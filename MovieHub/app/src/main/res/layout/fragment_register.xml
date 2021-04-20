@@ -1,14 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".fragments.RegisterFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
+        android:id="@+id/LinearLayout_inputs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Regsiter Fragment" />
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginRight="30dp"
+        android:alpha="1"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
-</FrameLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:text="Create Your MovieHub Account"
+            android:textColor="@color/md_white_1000"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="Enter your information below"
+            android:textColor="@color/md_grey_50"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/registerNameEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/md_black_1000"
+            android:textColorHint="@color/md_black_1000"
+            android:layout_marginTop="30dp"
+            android:drawableTint="@color/md_black_1000"
+            android:background="@drawable/edittext_background"
+            android:drawableStart="@drawable/ic_baseline_person"
+            android:drawableLeft="@drawable/ic_baseline_person"
+            android:drawablePadding="16dp"
+            android:hint="Name"
+            android:inputType="textPersonName"
+            android:padding="16dp"
+            android:textSize="14sp" />
+
+
+        <EditText
+            android:id="@+id/registerEmailEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/edittext_background"
+            android:drawableTint="@color/md_black_1000"
+            android:drawableStart="@drawable/ic_baseline_email"
+            android:drawableLeft="@drawable/ic_baseline_email"
+            android:drawablePadding="16dp"
+            android:hint="Email"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/md_black_1000"
+            android:textColorHint="@color/md_black_1000"
+            android:padding="16dp"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/registerPasswordEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/md_black_1000"
+            android:textColorHint="@color/md_black_1000"
+            android:background="@drawable/edittext_background"
+            android:drawableStart="@drawable/ic_baseline_lock"
+            android:drawableLeft="@drawable/ic_baseline_lock"
+            android:drawableEnd="@drawable/ic_baseline_visibility"
+            android:drawableRight="@drawable/ic_baseline_visibility"
+            android:drawablePadding="16dp"
+            android:hint="Password"
+            android:drawableTint="@color/md_black_1000"
+            android:inputType="textPassword"
+            android:padding="16dp"
+            android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/registerButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/button_background_red"
+            android:text="Register"
+            android:textColor="@color/md_white_1000" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
