@@ -248,6 +248,7 @@
     <color name="maximumYellowRed">#FDB849</color>
     <color name="pullmanBrownUPSBrown">#653D01</color>
     <color name="moviePrimaryGold">#ffbf00</color>
+    <color name="moviePrimaryOrange">#FF9900</color>
     <color name="movieAccentYellow">#ffcf40</color>
 
     <!--deep orange-->
