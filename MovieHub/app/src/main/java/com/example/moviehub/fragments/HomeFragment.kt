@@ -42,6 +42,7 @@ class HomeFragment : Fragment(){
         observeTrendingMoviesByPage()
 
         observeGenreMoviesByPage()
+        observeGenreShowsByPage()
 
         observeTrendingShowsByPage()
         observeBaseImageUrl()
@@ -139,31 +140,93 @@ class HomeFragment : Fragment(){
             viewModel.getGenreMoviesByPageResponse.collect { event ->
                 when(event){
                     is HomeViewModel.GetGenreMoviesByPageEvent.Success -> {
-                        sharedViewModel.listOfGenres = viewModel.listOfGenres
 
-                        for ((key, value) in viewModel.listOfGenres) {
-                            //FOR EVERY GENRE IN LIST OF GENRES
-                            for (movie in value) {
-                                //FOR EVERY MOVIE IN THAT GENRE
-                                movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.poster_path}"
-                                movie.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.backdrop_path}"
-                                viewModel.getMovieProviders(movie.id)
+                        if (viewModel.listOfGenresMovies.size > 4) {
+
+                            sharedViewModel.listOfGenresMovies = viewModel.listOfGenresMovies
+
+                            for ((key, value) in viewModel.listOfGenresMovies) {
+                                //FOR EVERY GENRE IN LIST OF GENRES
+                                for (movie in value) {
+                                    //FOR EVERY MOVIE IN THAT GENRE
+                                    movie.poster_path =
+                                        "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.poster_path}"
+                                    movie.backdrop_path =
+                                        "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.backdrop_path}"
+                                    viewModel.getMovieProviders(movie.id)
+                                }
+
+                                //TODO:Need to map GENRE ID codes to Strings
+                                categoryMovieList.add(
+                                    AllCategory(
+                                        key,
+                                        value as ArrayList<MediaBody>
+                                    )
+                                )
                             }
 
-                            //TODO: Need to map GENRE ID codes to Strings
-                            categoryMovieList.add(AllCategory(key, value as ArrayList<MediaBody>))
+                            mainRecyclerAdapter =
+                                MainRecyclerAdapter(requireContext(), categoryMovieList)
+                            binding.homeRecyclerView.adapter = mainRecyclerAdapter
+                            //viewModel.getGenreShowsByPage(1)
+                            Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT)
+                                .show()
                         }
-
-                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryMovieList)
-                        binding.homeRecyclerView.adapter = mainRecyclerAdapter
-                        //viewModel.getGenreShowsByPage(1)
-                        Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
                     is HomeViewModel.GetGenreMoviesByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
                     is HomeViewModel.GetGenreMoviesByPageEvent.Loading -> {
 
                     }
                     is HomeViewModel.GetGenreMoviesByPageEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeGenreShowsByPage(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.getGenreShowsByPageResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.GetGenreShowsByPageEvent.Success -> {
+
+                        if (viewModel.listOfGenresShows.size > 4) {
+
+                            sharedViewModel.listOfGenresShows = viewModel.listOfGenresShows
+
+                            for ((key, value) in viewModel.listOfGenresShows) {
+                                //FOR EVERY GENRE IN LIST OF GENRES
+                                for (show in value) {
+                                    //FOR EVERY SHOW IN THAT GENRE
+                                    show.poster_path =
+                                        "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.poster_path}"
+                                    show.backdrop_path =
+                                        "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.backdrop_path}"
+                                    viewModel.getShowProviders(show.id)
+                                }
+
+                                //TODO:Need to map GENRE ID codes to Strings
+                                categoryShowList.add(
+                                    AllCategory(
+                                        key,
+                                        value as ArrayList<MediaBody>
+                                    )
+                                )
+                            }
+
+                            mainRecyclerAdapter =
+                                MainRecyclerAdapter(requireContext(), categoryShowList)
+                            binding.homeRecyclerView.adapter = mainRecyclerAdapter
+                            //viewModel.getGenreShowsByPage(1)
+                            Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT)
+                                .show()
+                        }
+                    }
+                    is HomeViewModel.GetGenreShowsByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetGenreShowsByPageEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.GetGenreShowsByPageEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
                     else -> Unit
                 }
             }
@@ -224,6 +287,13 @@ class HomeFragment : Fragment(){
                     is HomeViewModel.GetImageSizesEvent.Success -> {
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                         viewModel.getTrendingMoviesByPage(1)
+
+                        viewModel.getGenreShowsByPage(10, "10759")
+                        viewModel.getGenreShowsByPage(10, "16")
+                        viewModel.getGenreShowsByPage(10, "35")
+                        viewModel.getGenreShowsByPage(10, "80")
+                        viewModel.getGenreShowsByPage(10, "99")
+
                         viewModel.getGenreMoviesByPage(15, "35")
                         viewModel.getGenreMoviesByPage(15, "28")
                         viewModel.getGenreMoviesByPage(15, "12")

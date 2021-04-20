@@ -78,6 +78,19 @@ class DefaultMediaRepository @Inject constructor(
         }
     }
 
+    override suspend fun getGenreShowsByPage(page: Int, genres: String): Resource<ResultBody> {
+        return try {
+            val response = api.getGenreShowsByPage(page, genres)
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!, null)
+            }else {
+                Resource.Error(response.message())
+            }
+        } catch (e: Exception){
+            Resource.Exception(e.message ?: "An error occurred")
+        }
+    }
+
     override suspend fun getTrendingShowsByPage(page: Int): Resource<ResultBody> {
         return try {
             val response = api.getTrendingShowsByPage(page)

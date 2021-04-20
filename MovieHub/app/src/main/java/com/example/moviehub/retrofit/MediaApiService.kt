@@ -30,6 +30,9 @@ interface MediaApiService {
     @GET("media/discover/movie")
     suspend fun getGenreMoviesByPage(@Query("page") page: Int, @Query("with_genres")genres: String): Response<ResultBody>
 
+    @GET("media/discover/show")
+    suspend fun getGenreShowsByPage(@Query("page") page: Int, @Query("with_genres")genres: String): Response<ResultBody>
+
     @GET("media/trending/show/{page}")
     suspend fun getTrendingShowsByPage(@Path("page") page: Int): Response<ResultBody>
 

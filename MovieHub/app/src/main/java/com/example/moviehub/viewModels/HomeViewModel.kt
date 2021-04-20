@@ -3,21 +3,15 @@ package com.example.moviehub.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviehub.helpers.NetworkHelper
-import com.example.moviehub.models.AllCategory
 import com.example.moviehub.models.GenreModel
 import com.example.moviehub.models.MediaBody
-import com.example.moviehub.models.WatchProviderBody
-import com.example.moviehub.repository.MainRepository
 import com.example.moviehub.repository.MediaRepository
 import com.example.moviehub.utils.DispatcherProvider
 import com.example.moviehub.utils.Resource
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -41,6 +35,14 @@ class HomeViewModel @Inject constructor(
         class Exception(val exceptionText: String): GetGenreMoviesByPageEvent()
         object Loading: GetGenreMoviesByPageEvent()
         object Empty: GetGenreMoviesByPageEvent()
+    }
+
+    sealed class GetGenreShowsByPageEvent {
+        class Success(val resultText: String): GetGenreShowsByPageEvent()
+        class Failure(val errorText: String): GetGenreShowsByPageEvent()
+        class Exception(val exceptionText: String): GetGenreShowsByPageEvent()
+        object Loading: GetGenreShowsByPageEvent()
+        object Empty: GetGenreShowsByPageEvent()
     }
 
     sealed class GetBaseImageUrlEvent {
@@ -105,6 +107,9 @@ class HomeViewModel @Inject constructor(
     private val _getGenreMoviesByPageResponse = MutableStateFlow<GetGenreMoviesByPageEvent>(GetGenreMoviesByPageEvent.Empty)
     val getGenreMoviesByPageResponse: StateFlow<GetGenreMoviesByPageEvent> = _getGenreMoviesByPageResponse
 
+    private val _getGenreShowsByPageResponse = MutableStateFlow<GetGenreShowsByPageEvent>(GetGenreShowsByPageEvent.Empty)
+    val getGenreShowsByPageResponse: StateFlow<GetGenreShowsByPageEvent> = _getGenreShowsByPageResponse
+
     private val _getTrendingShowsByPageResponse = MutableStateFlow<GetTrendingShowsByPageEvent>(GetTrendingShowsByPageEvent.Empty)
     val getTrendingShowsByPageResponse: StateFlow<GetTrendingShowsByPageEvent> = _getTrendingShowsByPageResponse
 
@@ -135,7 +140,8 @@ class HomeViewModel @Inject constructor(
     var selectedTab = 0
 
     var comedyList = arrayListOf<MediaBody>()
-    var listOfGenres = hashMapOf<String, MutableList<MediaBody>>()
+    var listOfGenresMovies = hashMapOf<String, MutableList<MediaBody>>()
+    var listOfGenresShows = hashMapOf<String, MutableList<MediaBody>>()
 
 
 
@@ -162,13 +168,29 @@ class HomeViewModel @Inject constructor(
             if(networkHelper.isNetworkConnected()){
                 when(val response = repository.getGenreMoviesByPage(page, genre)){
                     is Resource.Success -> {
-                        response.data?.let { listOfGenres.put(genre, it.results) }
+                        response.data?.let { listOfGenresMovies.put(genre, it.results) }
                         _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Success("Genre Movies Retrieved")
                     }
                     is Resource.Error -> _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Failure(response.message!!)
                     is Resource.Exception -> _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Exception(response.message!!)
                 }
             }else _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Failure("No internet connection")
+        }
+    }
+
+    fun getGenreShowsByPage(page: Int, genre: String){
+        viewModelScope.launch(dispatchers.io){
+            _getGenreShowsByPageResponse.value = GetGenreShowsByPageEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = repository.getGenreShowsByPage(page, genre)){
+                    is Resource.Success -> {
+                        response.data?.let { listOfGenresShows.put(genre, it.results) }
+                        _getGenreShowsByPageResponse.value = GetGenreShowsByPageEvent.Success("Genre Shows Retrieved")
+                    }
+                    is Resource.Error -> _getGenreShowsByPageResponse.value = GetGenreShowsByPageEvent.Failure(response.message!!)
+                    is Resource.Exception -> _getGenreShowsByPageResponse.value = GetGenreShowsByPageEvent.Exception(response.message!!)
+                }
+            }else _getGenreShowsByPageResponse.value = GetGenreShowsByPageEvent.Failure("No internet connection")
         }
     }
 
@@ -251,7 +273,7 @@ class HomeViewModel @Inject constructor(
                             }
                         }
 
-                        for ((key, value) in listOfGenres) {
+                        for ((key, value) in listOfGenresMovies) {
                             //FOR EVERY GENRE IN LIST OF GENRES
                             value.find { it.id == movieId }?.providers = response.data
                             value.find { it.id == movieId }?.providers?.results?.let {
@@ -286,6 +308,19 @@ class HomeViewModel @Inject constructor(
                                 }
                             }
                         }
+
+                        for ((key, value) in listOfGenresShows) {
+                            //FOR EVERY GENRE IN LIST OF GENRES
+                            value.find { it.id == showId }?.providers = response.data
+                            value.find { it.id == showId }?.providers?.results?.let {
+                                it.CA?.flatrate?.let { providers ->
+                                    for (provider in providers) {
+                                        provider.logo_path = "${baseImageUrl}${imageSizes[6]}${provider.logo_path}"
+                                    }
+                                }
+                            }
+                        }
+
                         _getShowProvidersResponse.value = GetShowProvidersEvent.Success("Show Providers Retrieved")
                     }
                     is Resource.Error -> _getShowProvidersResponse.value = GetShowProvidersEvent.Failure(response.message!!)

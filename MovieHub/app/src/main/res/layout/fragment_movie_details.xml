@@ -178,6 +178,7 @@
             android:layout_margin="8dp"
             android:fontFamily="@font/roboto_light"
             android:text="TextView"
+            android:background="#07000000"
             android:textAlignment="textStart"
             android:textColor="@color/md_white_1000"
             android:textSize="12sp"
