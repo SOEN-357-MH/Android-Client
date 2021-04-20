@@ -60,10 +60,12 @@ class MovieTinderFragment : Fragment() {
                 //Do something on the left!
                 //You also have access to the original object.
                 //If you want to use it just cast it (String) dataObject
+                //TODO: Anything? Don't Show again?
                 Toast.makeText(requireContext(), "Left!", Toast.LENGTH_SHORT).show()
             }
 
             override fun onRightCardExit(p0: Any?) {
+                //TODO: Add to Watchlist
                 Toast.makeText(requireContext(), "Right!", Toast.LENGTH_SHORT).show()
             }
 
