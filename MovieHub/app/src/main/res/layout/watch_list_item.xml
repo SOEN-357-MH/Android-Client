@@ -89,12 +89,11 @@
         android:text="18+"
         android:textSize="16sp"
         android:textStyle="bold"
-        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/wlCheckBox"
         style="@style/Widget.AppCompat.CompoundButton.CheckBox"
         android:layout_width="29dp"
         android:layout_height="36dp"
