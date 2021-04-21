@@ -24,7 +24,7 @@ interface MainApiService {
 
     @PUT("account/user/{username}/watchlist/show/{showId}")
     suspend fun addShowToWatchlist(@Path("username") username: String, @Path("showId")showId: Int): Response<ResponseBody>
-    
+
     /***
      * User api requests end
      */

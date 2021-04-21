@@ -38,4 +38,30 @@ class DefaultMainRepository @Inject constructor(
             Resource.Exception(e.message ?: "An error occurred")
         }
     }
+
+    override suspend fun addMovieToWatchlist(username: String, movieID: Int): Resource<ResponseBody> {
+        return try {
+            val response = api.addMovieToWatchlist(username, movieID)
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!, null)
+            }else {
+                Resource.Error(response.message())
+            }
+        } catch (e: Exception){
+            Resource.Exception(e.message ?: "An error occurred")
+        }
+    }
+
+    override suspend fun addShowToWatchlist(username: String, showID: Int): Resource<ResponseBody> {
+        return try {
+            val response = api.addShowToWatchlist(username, showID)
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!, null)
+            }else {
+                Resource.Error(response.message())
+            }
+        } catch (e: Exception){
+            Resource.Exception(e.message ?: "An error occurred")
+        }
+    }
 }

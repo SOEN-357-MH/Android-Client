@@ -7,11 +7,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
 import com.example.moviehub.adapters.DetailsLogoAdapter
 import com.example.moviehub.databinding.FragmentMovieDetailsBinding
+import com.example.moviehub.viewModels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,6 +25,7 @@ class MovieDetailsFragment : Fragment() {
     private val args : MovieDetailsFragmentArgs by navArgs()
 
     private var logoAdapter = DetailsLogoAdapter(ArrayList())
+    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +72,11 @@ class MovieDetailsFragment : Fragment() {
            binding.dNoStream.visibility = View.VISIBLE
         }()
 
+        binding.watchlistButton.setOnClickListener{
+
+            addMovieToWatchlist("Slayer42069", args.mediaBody.id)
+            addShowToWatchlist("Slayer42069", args.mediaBody.id)
+        }
 
         // Inflate the layout for this fragment
         return binding.root
@@ -82,6 +90,14 @@ class MovieDetailsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun addMovieToWatchlist(username: String, movieID: Int){
+        viewModel.addMovieToWatchlist(username, movieID)
+    }
+
+    private fun addShowToWatchlist(username: String, showID: Int){
+        viewModel.addShowToWatchlist(username, showID)
     }
 
 }

@@ -16,6 +16,10 @@ interface MainRepository {
 
     suspend fun registerUser(userBody: UserBody): Resource<ResponseBody>
 
+    suspend fun addMovieToWatchlist(username: String, movieID: Int): Resource<ResponseBody>
+
+    suspend fun addShowToWatchlist(username: String, showID: Int): Resource<ResponseBody>
+
     /***
      * User api requests end
      */

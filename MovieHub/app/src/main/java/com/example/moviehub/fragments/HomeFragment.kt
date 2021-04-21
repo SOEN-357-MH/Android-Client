@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.moviehub.adapters.MainRecyclerAdapter
 import com.example.moviehub.databinding.FragmentHomeBinding
 import com.example.moviehub.models.AllCategory
+import com.example.moviehub.models.LoginBody
 import com.example.moviehub.models.MediaBody
 import com.example.moviehub.viewModels.HomeViewModel
 import com.example.moviehub.viewModels.SharedViewModel
@@ -382,7 +383,6 @@ class HomeFragment : Fragment(){
             }
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()

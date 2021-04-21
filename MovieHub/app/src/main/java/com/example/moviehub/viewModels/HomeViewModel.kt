@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.moviehub.helpers.NetworkHelper
 import com.example.moviehub.models.GenreModel
 import com.example.moviehub.models.MediaBody
+import com.example.moviehub.repository.MainRepository
 import com.example.moviehub.repository.MediaRepository
 import com.example.moviehub.utils.DispatcherProvider
 import com.example.moviehub.utils.Resource
@@ -18,8 +19,25 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val repository: MediaRepository,
     private val dispatchers: DispatcherProvider,
-    private val networkHelper: NetworkHelper
+    private val networkHelper: NetworkHelper,
+    private val userRepository: MainRepository
 ): ViewModel() {
+
+    sealed class AddMovieToWatchlistEvent {
+        class Success(val resultText: String): AddMovieToWatchlistEvent()
+        class Failure(val errorText: String): AddMovieToWatchlistEvent()
+        class Exception(val exceptionText: String): AddMovieToWatchlistEvent()
+        object Loading: AddMovieToWatchlistEvent()
+        object Empty: AddMovieToWatchlistEvent()
+    }
+
+    sealed class AddShowToWatchlistEvent {
+        class Success(val resultText: String): AddShowToWatchlistEvent()
+        class Failure(val errorText: String): AddShowToWatchlistEvent()
+        class Exception(val exceptionText: String): AddShowToWatchlistEvent()
+        object Loading: AddShowToWatchlistEvent()
+        object Empty: AddShowToWatchlistEvent()
+    }
 
     sealed class GetTrendingMoviesByPageEvent {
         class Success(val resultText: String): GetTrendingMoviesByPageEvent()
@@ -131,11 +149,16 @@ class HomeViewModel @Inject constructor(
     private val _discoverMovieResponse = MutableStateFlow<DiscoverMovieEvent>(DiscoverMovieEvent.Empty)
     val discoverMovieResponse: StateFlow<DiscoverMovieEvent> = _discoverMovieResponse
 
+    private val _addMovieToWatchlistResponse = MutableStateFlow<AddMovieToWatchlistEvent>(AddMovieToWatchlistEvent.Empty)
+    val addMovieToWatchlistResponse: StateFlow<AddMovieToWatchlistEvent> = _addMovieToWatchlistResponse
+
+    private val _addShowToWatchlistResponse = MutableStateFlow<AddShowToWatchlistEvent>(AddShowToWatchlistEvent.Empty)
+    val addShowToWatchlistResponse: StateFlow<AddShowToWatchlistEvent> = _addShowToWatchlistResponse
+
     var movieList = arrayListOf<MediaBody>()
     var showList = arrayListOf<MediaBody>()
     var baseImageUrl: String? = null
     var imageSizes = arrayListOf<String>()
-    var pageCounter = 1
     var movieGenres: GenreModel? = null
     var selectedTab = 0
 
@@ -145,8 +168,35 @@ class HomeViewModel @Inject constructor(
     var movieGenreMap = hashMapOf<String, String>()
     var showGenreMap = hashMapOf<String, String>()
 
+    fun addMovieToWatchlist(username: String, movieID: Int){
+        viewModelScope.launch(dispatchers.io){
+            _addMovieToWatchlistResponse.value = AddMovieToWatchlistEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = userRepository.addMovieToWatchlist(username, movieID)){
+                    is Resource.Success -> {
+                        _addMovieToWatchlistResponse.value = AddMovieToWatchlistEvent.Success("Movie Added to Watchlist")
+                    }
+                    is Resource.Error -> _addMovieToWatchlistResponse.value = AddMovieToWatchlistEvent.Failure(response.message!!)
+                    is Resource.Exception -> _addMovieToWatchlistResponse.value = AddMovieToWatchlistEvent.Exception(response.message!!)
+                }
+            }else _addMovieToWatchlistResponse.value = AddMovieToWatchlistEvent.Failure("No internet connection")
+        }
+    }
 
-
+    fun addShowToWatchlist(username: String, showID: Int){
+        viewModelScope.launch(dispatchers.io){
+            _addShowToWatchlistResponse.value = AddShowToWatchlistEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = userRepository.addShowToWatchlist(username, showID)){
+                    is Resource.Success -> {
+                        _addShowToWatchlistResponse.value = AddShowToWatchlistEvent.Success("Show Added to Watchlist")
+                    }
+                    is Resource.Error -> _addShowToWatchlistResponse.value = AddShowToWatchlistEvent.Failure(response.message!!)
+                    is Resource.Exception -> _addShowToWatchlistResponse.value = AddShowToWatchlistEvent.Exception(response.message!!)
+                }
+            }else _addShowToWatchlistResponse.value = AddShowToWatchlistEvent.Failure("No internet connection")
+        }
+    }
 
     fun getTrendingMoviesByPage(page: Int){
         viewModelScope.launch(dispatchers.io){
