@@ -30,10 +30,11 @@ class WatchListAdapter(
         fun bind(watchListItem: MediaBody) {
 
             var genres = "Genres: "
-            for (item in watchListItem.genres) {
-                genres = "$genres$item, "
+            if (watchListItem != null && watchListItem.genres != null) {
+                for (item in watchListItem.genres) {
+                    genres = "$genres$item, "
+                }
             }
-
             binding.wlMovieTitle.text = watchListItem.title
             binding.wlMovieGenre.text = genres
             binding.wlImage.load(watchListItem.poster_path)
