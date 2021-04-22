@@ -161,6 +161,8 @@ class HomeViewModel @Inject constructor(
     var imageSizes = arrayListOf<String>()
     var movieGenres: GenreModel? = null
     var selectedTab = 0
+    var genresLoadedMovies = 0
+    var genresLoadedShows = 0
 
     var listOfGenresMovies = hashMapOf<String, MutableList<MediaBody>>()
     var listOfGenresShows = hashMapOf<String, MutableList<MediaBody>>()
@@ -227,7 +229,24 @@ class HomeViewModel @Inject constructor(
             if(networkHelper.isNetworkConnected()){
                 when(val response = repository.getGenreMoviesByPage(page, genre)){
                     is Resource.Success -> {
-                        response.data?.let { listOfGenresMovies.put(genre, it.results) }
+
+                        genresLoadedMovies++
+
+                        if (listOfGenresMovies.containsKey(genre)){
+
+                            response.data?.let {
+                                var currentList = listOfGenresMovies[genre]
+                                var newValues = it.results
+                                var newList = ArrayList<MediaBody>()
+                                newList.addAll(currentList!!)
+                                newList.addAll(newValues)
+                                listOfGenresMovies.remove(genre)
+                                listOfGenresMovies.put(genre, newList)
+                            }
+
+                        } else response.data?.let { listOfGenresMovies.put(genre, it.results) }
+
+
                         _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Success("Genre Movies Retrieved")
                     }
                     is Resource.Error -> _getGenreMoviesByPageResponse.value = GetGenreMoviesByPageEvent.Failure(response.message!!)
@@ -239,18 +258,33 @@ class HomeViewModel @Inject constructor(
 
     fun getGenreShowsByPage(page: Int, genre: String){
 
-        showGenreMap["10759"] = "Action Movies"
-        showGenreMap["16"] = "Animation Movies"
-        showGenreMap["35"] = "Comedy Movies"
-        showGenreMap["80"] = "Crime Movies"
-        showGenreMap["99"] = "Documentary Movies"
+        showGenreMap["10759"] = "Action Shows"
+        showGenreMap["16"] = "Animation Shows"
+        showGenreMap["35"] = "Comedy Shows"
+        showGenreMap["80"] = "Crime Shows"
+        showGenreMap["99"] = "Documentary Shows"
 
         viewModelScope.launch(dispatchers.io){
             _getGenreShowsByPageResponse.value = GetGenreShowsByPageEvent.Loading
             if(networkHelper.isNetworkConnected()){
                 when(val response = repository.getGenreShowsByPage(page, genre)){
                     is Resource.Success -> {
-                        response.data?.let { listOfGenresShows.put(genre, it.results) }
+
+                        genresLoadedShows++
+
+                        if (listOfGenresShows.containsKey(genre)){
+
+                            response.data?.let {
+                                var currentList = listOfGenresShows[genre]
+                                var newValues = it.results
+                                var newList = ArrayList<MediaBody>()
+                                newList.addAll(currentList!!)
+                                newList.addAll(newValues)
+                                listOfGenresShows.remove(genre)
+                                listOfGenresShows.put(genre, newList)
+                            }
+
+                        } else response.data?.let { listOfGenresShows.put(genre, it.results) }
                         _getGenreShowsByPageResponse.value = GetGenreShowsByPageEvent.Success("Genre Shows Retrieved")
                     }
                     is Resource.Error -> _getGenreShowsByPageResponse.value = GetGenreShowsByPageEvent.Failure(response.message!!)

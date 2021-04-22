@@ -22,6 +22,7 @@ import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
 import timber.log.Timber
+import java.lang.Thread.sleep
 
 
 @AndroidEntryPoint
@@ -142,7 +143,7 @@ class HomeFragment : Fragment(){
                 when(event){
                     is HomeViewModel.GetGenreMoviesByPageEvent.Success -> {
 
-                        if (viewModel.listOfGenresMovies.size > 4) {
+                        if (viewModel.genresLoadedMovies == 15) {
 
                             sharedViewModel.listOfGenresMovies = viewModel.listOfGenresMovies
 
@@ -191,7 +192,7 @@ class HomeFragment : Fragment(){
                 when(event){
                     is HomeViewModel.GetGenreShowsByPageEvent.Success -> {
 
-                        if (viewModel.listOfGenresShows.size > 4) {
+                        if (viewModel.genresLoadedShows == 15) {
 
                             sharedViewModel.listOfGenresShows = viewModel.listOfGenresShows
 
@@ -290,16 +291,45 @@ class HomeFragment : Fragment(){
                         viewModel.getTrendingMoviesByPage(1)
 
                         viewModel.getGenreShowsByPage(10, "10759")
-                        viewModel.getGenreShowsByPage(10, "16")
-                        viewModel.getGenreShowsByPage(10, "35")
-                        viewModel.getGenreShowsByPage(10, "80")
-                        viewModel.getGenreShowsByPage(10, "99")
+                        viewModel.getGenreShowsByPage(11, "10759")
+                        viewModel.getGenreShowsByPage(12, "10759")
 
-                        viewModel.getGenreMoviesByPage(15, "35")
-                        viewModel.getGenreMoviesByPage(15, "28")
-                        viewModel.getGenreMoviesByPage(15, "12")
-                        viewModel.getGenreMoviesByPage(15, "16")
-                        viewModel.getGenreMoviesByPage(15, "80")
+                        viewModel.getGenreShowsByPage(10, "16")
+                        viewModel.getGenreShowsByPage(11, "16")
+                        viewModel.getGenreShowsByPage(12, "16")
+
+                        viewModel.getGenreShowsByPage(10, "35")
+                        viewModel.getGenreShowsByPage(11, "35")
+                        viewModel.getGenreShowsByPage(12, "35")
+
+                        viewModel.getGenreShowsByPage(10, "80")
+                        viewModel.getGenreShowsByPage(11, "80")
+                        viewModel.getGenreShowsByPage(12, "80")
+
+                        viewModel.getGenreShowsByPage(10, "99")
+                        viewModel.getGenreShowsByPage(11, "99")
+                        viewModel.getGenreShowsByPage(12, "99")
+
+                        viewModel.getGenreMoviesByPage(10, "35")
+                        viewModel.getGenreMoviesByPage(11, "35")
+                        viewModel.getGenreMoviesByPage(12, "35")
+
+                        viewModel.getGenreMoviesByPage(10, "28")
+                        viewModel.getGenreMoviesByPage(11, "28")
+                        viewModel.getGenreMoviesByPage(12, "28")
+
+                        viewModel.getGenreMoviesByPage(10, "12")
+                        viewModel.getGenreMoviesByPage(11, "12")
+                        viewModel.getGenreMoviesByPage(12, "12")
+
+                        viewModel.getGenreMoviesByPage(10, "16")
+                        viewModel.getGenreMoviesByPage(11, "16")
+                        viewModel.getGenreMoviesByPage(12, "16")
+
+                        viewModel.getGenreMoviesByPage(10, "80")
+                        viewModel.getGenreMoviesByPage(11, "80")
+                        viewModel.getGenreMoviesByPage(12, "80")
+
 
                     }
                     is HomeViewModel.GetImageSizesEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()

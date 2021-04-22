@@ -32,7 +32,7 @@ class WatchListAdapter(
                 binding.wlAdult.visibility = View.GONE
             }
 
-            if (binding.checkBox.isChecked) {
+            if (binding.wlCheckBox.isChecked) {
                 // What happens when checked
                 binding.wlWatchedTV.visibility = View.VISIBLE
             } else {

@@ -65,9 +65,9 @@ class DefaultMediaRepository @Inject constructor(
         }
     }
 
-    override suspend fun getGenreMoviesByPage(page: Int, genres: String): Resource<ResultBody> {
+    override suspend fun getGenreMoviesByPage(page: Int, genre: String): Resource<ResultBody> {
         return try {
-            val response = api.getGenreMoviesByPage(page, genres)
+            val response = api.getGenreMoviesByPage(page, genre)
             if(response.isSuccessful){
                 Resource.Success(response.body()!!, null)
             }else {
@@ -78,9 +78,9 @@ class DefaultMediaRepository @Inject constructor(
         }
     }
 
-    override suspend fun getGenreShowsByPage(page: Int, genres: String): Resource<ResultBody> {
+    override suspend fun getGenreShowsByPage(page: Int, genre: String): Resource<ResultBody> {
         return try {
-            val response = api.getGenreShowsByPage(page, genres)
+            val response = api.getGenreShowsByPage(page, genre)
             if(response.isSuccessful){
                 Resource.Success(response.body()!!, null)
             }else {
