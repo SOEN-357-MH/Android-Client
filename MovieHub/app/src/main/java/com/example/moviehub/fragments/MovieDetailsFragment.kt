@@ -5,9 +5,11 @@ import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.LinearLayoutManager
 import coil.load
@@ -15,6 +17,7 @@ import com.example.moviehub.adapters.DetailsLogoAdapter
 import com.example.moviehub.databinding.FragmentMovieDetailsBinding
 import com.example.moviehub.viewModels.HomeViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 
 @AndroidEntryPoint
 class MovieDetailsFragment : Fragment() {
@@ -98,6 +101,86 @@ class MovieDetailsFragment : Fragment() {
 
     private fun addShowToWatchlist(username: String, showID: Int){
         viewModel.addShowToWatchlist(username, showID)
+    }
+
+    private fun removeMovieFromWatchlist(username: String, movieID: Int){
+        viewModel.removeMovieFromWatchlist(username, movieID)
+    }
+
+    private fun removeShowFromWatchlist(username: String, showID: Int){
+        viewModel.removeShowFromWatchlist(username, showID)
+    }
+
+    private fun observeAddMovieToWatchlist(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.addMovieToWatchlistResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.AddMovieToWatchlistEvent.Success -> {
+
+                    }
+                    is HomeViewModel.AddMovieToWatchlistEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.AddMovieToWatchlistEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.AddMovieToWatchlistEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeAddShowToWatchlist(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.addShowToWatchlistResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.AddShowToWatchlistEvent.Success -> {
+
+                    }
+                    is HomeViewModel.AddShowToWatchlistEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.AddShowToWatchlistEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.AddShowToWatchlistEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeRemoveMovieFromWatchlist(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.removeMovieFromWatchlistResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.RemoveMovieFromWatchlistEvent.Success -> {
+
+                    }
+                    is HomeViewModel.RemoveMovieFromWatchlistEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.RemoveMovieFromWatchlistEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.RemoveMovieFromWatchlistEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeRemoveShowFromWatchlist(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.removeShowFromWatchlistResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.RemoveShowFromWatchlistEvent.Success -> {
+
+                    }
+                    is HomeViewModel.RemoveShowFromWatchlistEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.RemoveShowFromWatchlistEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.RemoveShowFromWatchlistEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
     }
 
 }

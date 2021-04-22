@@ -20,6 +20,10 @@ interface MainRepository {
 
     suspend fun addShowToWatchlist(username: String, showID: Int): Resource<ResponseBody>
 
+    suspend fun removeMovieFromWatchlist(username: String, movieID: Int): Resource<ResponseBody>
+
+    suspend fun removeShowFromWatchlist(username: String, showID: Int): Resource<ResponseBody>
+
     /***
      * User api requests end
      */

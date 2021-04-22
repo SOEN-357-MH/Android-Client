@@ -39,6 +39,22 @@ class HomeViewModel @Inject constructor(
         object Empty: AddShowToWatchlistEvent()
     }
 
+    sealed class RemoveMovieFromWatchlistEvent {
+        class Success(val resultText: String): RemoveMovieFromWatchlistEvent()
+        class Failure(val errorText: String): RemoveMovieFromWatchlistEvent()
+        class Exception(val exceptionText: String): RemoveMovieFromWatchlistEvent()
+        object Loading: RemoveMovieFromWatchlistEvent()
+        object Empty: RemoveMovieFromWatchlistEvent()
+    }
+
+    sealed class RemoveShowFromWatchlistEvent {
+        class Success(val resultText: String): RemoveShowFromWatchlistEvent()
+        class Failure(val errorText: String): RemoveShowFromWatchlistEvent()
+        class Exception(val exceptionText: String): RemoveShowFromWatchlistEvent()
+        object Loading: RemoveShowFromWatchlistEvent()
+        object Empty: RemoveShowFromWatchlistEvent()
+    }
+
     sealed class GetTrendingMoviesByPageEvent {
         class Success(val resultText: String): GetTrendingMoviesByPageEvent()
         class Failure(val errorText: String): GetTrendingMoviesByPageEvent()
@@ -155,6 +171,12 @@ class HomeViewModel @Inject constructor(
     private val _addShowToWatchlistResponse = MutableStateFlow<AddShowToWatchlistEvent>(AddShowToWatchlistEvent.Empty)
     val addShowToWatchlistResponse: StateFlow<AddShowToWatchlistEvent> = _addShowToWatchlistResponse
 
+    private val _removeMovieFromWatchlistResponse = MutableStateFlow<RemoveMovieFromWatchlistEvent>(RemoveMovieFromWatchlistEvent.Empty)
+    val removeMovieFromWatchlistResponse: StateFlow<RemoveMovieFromWatchlistEvent> = _removeMovieFromWatchlistResponse
+
+    private val _removeShowFromWatchlistResponse = MutableStateFlow<RemoveShowFromWatchlistEvent>(RemoveShowFromWatchlistEvent.Empty)
+    val removeShowFromWatchlistResponse: StateFlow<RemoveShowFromWatchlistEvent> = _removeShowFromWatchlistResponse
+
     var movieList = arrayListOf<MediaBody>()
     var showList = arrayListOf<MediaBody>()
     var baseImageUrl: String? = null
@@ -197,6 +219,36 @@ class HomeViewModel @Inject constructor(
                     is Resource.Exception -> _addShowToWatchlistResponse.value = AddShowToWatchlistEvent.Exception(response.message!!)
                 }
             }else _addShowToWatchlistResponse.value = AddShowToWatchlistEvent.Failure("No internet connection")
+        }
+    }
+
+    fun removeMovieFromWatchlist(username: String, movieID: Int){
+        viewModelScope.launch(dispatchers.io){
+            _removeMovieFromWatchlistResponse.value = RemoveMovieFromWatchlistEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = userRepository.removeMovieFromWatchlist(username, movieID)){
+                    is Resource.Success -> {
+                        _removeMovieFromWatchlistResponse.value = RemoveMovieFromWatchlistEvent.Success("Movie Removed from Watchlist")
+                    }
+                    is Resource.Error -> _removeMovieFromWatchlistResponse.value = RemoveMovieFromWatchlistEvent.Failure(response.message!!)
+                    is Resource.Exception -> _removeMovieFromWatchlistResponse.value = RemoveMovieFromWatchlistEvent.Exception(response.message!!)
+                }
+            }else _removeMovieFromWatchlistResponse.value = RemoveMovieFromWatchlistEvent.Failure("No internet connection")
+        }
+    }
+
+    fun removeShowFromWatchlist(username: String, showID: Int){
+        viewModelScope.launch(dispatchers.io){
+            _removeShowFromWatchlistResponse.value = RemoveShowFromWatchlistEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = userRepository.removeShowFromWatchlist(username, showID)){
+                    is Resource.Success -> {
+                        _removeShowFromWatchlistResponse.value = RemoveShowFromWatchlistEvent.Success("Show Removed from Watchlist")
+                    }
+                    is Resource.Error -> _removeShowFromWatchlistResponse.value = RemoveShowFromWatchlistEvent.Failure(response.message!!)
+                    is Resource.Exception -> _removeShowFromWatchlistResponse.value = RemoveShowFromWatchlistEvent.Exception(response.message!!)
+                }
+            }else _removeShowFromWatchlistResponse.value = RemoveShowFromWatchlistEvent.Failure("No internet connection")
         }
     }
 
