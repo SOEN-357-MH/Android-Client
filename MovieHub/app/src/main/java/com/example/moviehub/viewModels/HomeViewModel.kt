@@ -635,7 +635,7 @@ class HomeViewModel @Inject constructor(
             if (networkHelper.isNetworkConnected()) {
                 when (val response = userRepository.getMovieWatchlist(username)) {
                     is Resource.Success -> {
-                        movieWatchList = response.data!!.results
+                        movieWatchList = if (response.data?.results != null) response.data.results else arrayListOf()
                         _getMovieWatchlistResponse.value =
                             GetMovieWatchlistEvent.Success("Got Movie Watchlist")
                     }
@@ -655,7 +655,7 @@ class HomeViewModel @Inject constructor(
             if (networkHelper.isNetworkConnected()) {
                 when (val response = userRepository.getShowWatchlist(username)) {
                     is Resource.Success -> {
-                        showWatchList = response.data!!.results
+                        showWatchList = if (response.data?.results != null) response.data.results else arrayListOf()
                         _getShowWatchlistResponse.value =
                             GetShowWatchlistEvent.Success("Got Show Watchlist")
                     }
