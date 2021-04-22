@@ -64,4 +64,30 @@ class DefaultMainRepository @Inject constructor(
             Resource.Exception(e.message ?: "An error occurred")
         }
     }
+
+    override suspend fun removeMovieFromWatchlist(username: String, movieID: Int): Resource<ResponseBody> {
+        return try {
+            val response = api.removeMovieFromWatchlist(username, movieID)
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!, null)
+            }else {
+                Resource.Error(response.message())
+            }
+        } catch (e: Exception){
+            Resource.Exception(e.message ?: "An error occurred")
+        }
+    }
+
+    override suspend fun removeShowFromWatchlist(username: String, showID: Int): Resource<ResponseBody> {
+        return try {
+            val response = api.removeShowFromWatchlist(username, showID)
+            if(response.isSuccessful){
+                Resource.Success(response.body()!!, null)
+            }else {
+                Resource.Error(response.message())
+            }
+        } catch (e: Exception){
+            Resource.Exception(e.message ?: "An error occurred")
+        }
+    }
 }

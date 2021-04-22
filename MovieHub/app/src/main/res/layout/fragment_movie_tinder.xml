@@ -69,6 +69,7 @@
         android:id="@+id/frame"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        app:min_adapter_stack="0"
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toTopOf="@+id/mtDislikeBTN"
         app:layout_constraintEnd_toEndOf="parent"

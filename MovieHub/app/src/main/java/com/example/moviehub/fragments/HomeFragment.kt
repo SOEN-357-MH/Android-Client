@@ -240,6 +240,7 @@ class HomeFragment : Fragment(){
             viewModel.getTrendingShowsByPageResponse.collect { event ->
                 when(event){
                     is HomeViewModel.GetTrendingShowsByPageEvent.Success -> {
+                        sharedViewModel.showList = viewModel.showList
                         for(show in viewModel.showList){
                             show.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.poster_path}"
                             show.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.backdrop_path}"
