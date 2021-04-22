@@ -14,9 +14,12 @@ import com.example.moviehub.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.internal.synchronized
 import kotlinx.coroutines.launch
+import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
+import kotlin.collections.ArrayList
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
@@ -232,7 +235,7 @@ class HomeViewModel @Inject constructor(
     var showWatchList = arrayListOf<MediaBody>()
 
     var baseImageUrl: String? = null
-    var imageSizes = arrayListOf<String>()
+    var imageSizes = Collections.synchronizedList(arrayListOf<String>())
     var movieGenres: GenreModel? = null
     var selectedTab = 0
     var genresLoadedMovies = 0
