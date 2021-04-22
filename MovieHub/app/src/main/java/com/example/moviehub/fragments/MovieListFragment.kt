@@ -28,18 +28,17 @@ class MovieListFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModels()
-    private var watchListAdapter : WatchListAdapter? = null
+    private var watchListAdapter: WatchListAdapter? = null
 
     private var movieWatchlist: ArrayList<MediaBody> = ArrayList()
     private var showWatchlist: ArrayList<MediaBody> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        observeMovieWatchList()
-        //observeShowWatchList()
         viewModel.getImageSizes()
         viewModel.getBaseImageUrl()
-
+        observeMovieWatchList()
+        observeShowWatchList()
     }
 
     override fun onCreateView(
@@ -74,9 +73,9 @@ class MovieListFragment : Fragment() {
                     }
                     "TV Shows" -> {
                         viewModel.selectedTab = 1
-//                        showWatchlist = viewModel.showWatchList
-//                        watchListAdapter = WatchListAdapter(requireContext(), showWatchlist)
-//                        binding.mlRecyclerView.adapter = watchListAdapter
+                        showWatchlist = viewModel.showWatchList
+                        watchListAdapter = WatchListAdapter(requireContext(), showWatchlist)
+                        binding.mlRecyclerView.adapter = watchListAdapter
                     }
                 }
             }
@@ -95,52 +94,73 @@ class MovieListFragment : Fragment() {
         _binding = null
     }
 
-    private fun observeMovieWatchList(){
+    private fun observeMovieWatchList() {
         lifecycleScope.launchWhenStarted {
             viewModel.getMovieWatchlistResponse.collect { event ->
-                when(event){
+                when (event) {
                     is HomeViewModel.GetMovieWatchlistEvent.Success -> {
-                        for (movie in viewModel.movieWatchList) {
-                            movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.poster_path}"
-                            movie.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.backdrop_path}"
-                            viewModel.getMovieProviders(movie.id)
-                        }
-
-                        watchListAdapter = WatchListAdapter(requireContext(), viewModel.movieWatchList)
+                            for (movie in viewModel.movieWatchList) {
+                                movie.poster_path =
+                                    "${viewModel.baseImageUrl}original${movie.poster_path}"
+                                movie.backdrop_path =
+                                    "${viewModel.baseImageUrl}original${movie.backdrop_path}"
+                                viewModel.getMovieProviders(movie.id)
+                            }
+                        watchListAdapter =
+                            WatchListAdapter(requireContext(), viewModel.movieWatchList)
                         binding.mlRecyclerView.adapter = watchListAdapter
 
                     }
-                    is HomeViewModel.GetMovieWatchlistEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetMovieWatchlistEvent.Failure -> Toast.makeText(
+                        requireContext(),
+                        event.errorText,
+                        Toast.LENGTH_SHORT
+                    ).show()
                     is HomeViewModel.GetMovieWatchlistEvent.Loading -> {
 
                     }
-                    is HomeViewModel.GetMovieWatchlistEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetMovieWatchlistEvent.Exception -> Toast.makeText(
+                        requireContext(),
+                        event.exceptionText,
+                        Toast.LENGTH_SHORT
+                    ).show()
                     else -> Unit
                 }
             }
         }
     }
 
-    private fun observeShowWatchList(){
+    private fun observeShowWatchList() {
         lifecycleScope.launchWhenStarted {
             viewModel.getShowWatchlistResponse.collect { event ->
-                when(event){
+                when (event) {
                     is HomeViewModel.GetShowWatchlistEvent.Success -> {
-                        for (movie in viewModel.movieWatchList) {
-                            movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.poster_path}"
-                            movie.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.backdrop_path}"
-                            viewModel.getShowProviders(movie.id)
-                        }
+                            for (show in viewModel.showWatchList) {
+                                show.poster_path =
+                                    "${viewModel.baseImageUrl}original${show.poster_path}"
+                                show.backdrop_path =
+                                    "${viewModel.baseImageUrl}original${show.backdrop_path}"
+                                viewModel.getShowProviders(show.id)
+                            }
 
-                        watchListAdapter = WatchListAdapter(requireContext(), viewModel.showWatchList)
+                        watchListAdapter =
+                            WatchListAdapter(requireContext(), viewModel.showWatchList)
                         binding.mlRecyclerView.adapter = watchListAdapter
 
                     }
-                    is HomeViewModel.GetShowWatchlistEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetShowWatchlistEvent.Failure -> Toast.makeText(
+                        requireContext(),
+                        event.errorText,
+                        Toast.LENGTH_SHORT
+                    ).show()
                     is HomeViewModel.GetShowWatchlistEvent.Loading -> {
 
                     }
-                    is HomeViewModel.GetShowWatchlistEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetShowWatchlistEvent.Exception -> Toast.makeText(
+                        requireContext(),
+                        event.exceptionText,
+                        Toast.LENGTH_SHORT
+                    ).show()
                     else -> Unit
                 }
             }
