@@ -118,6 +118,7 @@ class HomeFragment : Fragment(){
                         for (movie in viewModel.movieList) {
                             movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.poster_path}"
                             movie.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.backdrop_path}"
+                            movie.media_type = "m"
                             viewModel.getMovieProviders(movie.id)
                         }
                         categoryMovieList.add(AllCategory("Trending Movies", viewModel.movieList))
@@ -156,6 +157,7 @@ class HomeFragment : Fragment(){
                                     movie.backdrop_path =
                                         "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.backdrop_path}"
                                     viewModel.getMovieProviders(movie.id)
+                                        movie.media_type = "m"
                                 }
 
                                 //TODO:Need to map GENRE ID codes to Strings
@@ -205,6 +207,7 @@ class HomeFragment : Fragment(){
                                     show.backdrop_path =
                                         "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.backdrop_path}"
                                     viewModel.getShowProviders(show.id)
+                                    show.media_type = "s"
                                 }
 
                                 //TODO:Need to map GENRE ID codes to Strings
@@ -246,6 +249,7 @@ class HomeFragment : Fragment(){
                             show.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.backdrop_path}"
                             show.title = show.name
                             show.release_date = show.first_air_date
+                                show.media_type = "s"
                             viewModel.getShowProviders(show.id)
                         }
                         categoryShowList.add(AllCategory("Trending Shows", viewModel.showList))

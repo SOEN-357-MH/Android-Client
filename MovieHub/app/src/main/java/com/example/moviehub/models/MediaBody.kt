@@ -15,7 +15,7 @@ data class MediaBody(
     var poster_path: String,
     var title: String,
     val overview: String,
-    val media_type: String,
+    var media_type: String,
     val origin_country: ArrayList<String>,
     val name: String,
     val first_air_date: String,
