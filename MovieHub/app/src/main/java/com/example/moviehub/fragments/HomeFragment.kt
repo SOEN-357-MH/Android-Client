@@ -37,7 +37,7 @@ class HomeFragment : Fragment(){
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private var mainRecyclerAdapter : MainRecyclerAdapter? = null
-    private var logoAdapter = FilterProvidersAdapter(ArrayList())
+    private var filterAdapter = FilterProvidersAdapter(ArrayList())
     private val categoryMovieList: ArrayList<AllCategory> = ArrayList()
     private val categoryShowList: ArrayList<AllCategory> = ArrayList()
 
@@ -61,6 +61,7 @@ class HomeFragment : Fragment(){
         viewModel.getMovieGenres()
 
 
+
     }
 
     override fun onCreateView(
@@ -74,6 +75,11 @@ class HomeFragment : Fragment(){
         binding.homeTabLayout.getTabAt(viewModel.selectedTab)?.select()
 
         binding.filterview.visibility = View.GONE
+
+        viewModel.populateProviders()
+        filterAdapter = FilterProvidersAdapter(viewModel.providers)
+        binding.FiltersRV.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+        binding.FiltersRV.adapter = filterAdapter
 
         return binding.root
     }

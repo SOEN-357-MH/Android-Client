@@ -5,6 +5,7 @@ import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviehub.helpers.NetworkHelper
+import com.example.moviehub.models.AdModel
 import com.example.moviehub.models.GenreModel
 import com.example.moviehub.models.MediaBody
 import com.example.moviehub.repository.MainRepository
@@ -246,6 +247,8 @@ class HomeViewModel @Inject constructor(
 
     var movieGenreMap = hashMapOf<String, String>()
     var showGenreMap = hashMapOf<String, String>()
+
+    var providers = arrayListOf<AdModel>()
 
     fun addMovieToWatchlist(username: String, movieID: Int) {
         viewModelScope.launch(dispatchers.io) {
@@ -670,6 +673,62 @@ class HomeViewModel @Inject constructor(
             } else _getShowWatchlistResponse.value =
                 GetShowWatchlistEvent.Failure("No internet connection")
         }
+    }
+
+    fun populateProviders(){
+        var ids: List<Int> = listOf(2,
+            3,
+            8,
+            10,
+            68,
+            78,
+            119,
+            140,
+            146,
+            192,
+            212,
+            223,
+            230,
+            283,
+            314,
+            326,
+            337,
+            348,
+            350,
+            449,
+            469,
+            492)
+
+        var names: List<String> = listOf("Apple Itunes",
+            "Google Play Movies",
+            "Netflix",
+            "Amazon Video",
+            "Microsoft Store",
+            "CBS",
+            "Amazon Prime Video",
+            "Cineplex",
+            "iciTouTV",
+            "Youtube",
+            "Hoopla",
+            "hayu",
+            "Crave",
+            "Crunchyroll",
+            "CBC Gem",
+            "CTV",
+            "Disney Plus",
+            "FXNow Canada",
+            "Apple TV Plus",
+            "Global TV",
+            "Club Illico",
+            "ILLICO")
+
+        providers.forEachIndexed { index, s ->
+            providers.add(AdModel(0,"", ids[index], names[index] ))
+        }
+
+
+
+
     }
 
 }
