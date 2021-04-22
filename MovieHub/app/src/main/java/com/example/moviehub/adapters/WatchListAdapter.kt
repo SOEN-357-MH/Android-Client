@@ -1,5 +1,6 @@
 package com.example.moviehub.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +10,7 @@ import com.example.moviehub.databinding.WatchListItemBinding
 import com.example.moviehub.models.MediaBody
 
 class WatchListAdapter(
+    private val context: Context,
     private val watchList: ArrayList<MediaBody>
 ) :
     RecyclerView.Adapter<WatchListAdapter.WatchListViewHolder>() {

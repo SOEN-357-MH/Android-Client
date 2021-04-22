@@ -34,13 +34,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:fontFamily="@font/roboto"
         android:text="Movie Title"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/wlAdult"
         app:layout_constraintStart_toEndOf="@+id/cardView"
-        app:layout_constraintTop_toTopOf="@+id/mriMovieCard" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/wlLogoRV"
@@ -69,15 +70,17 @@
 
     <TextView
         android:id="@+id/wlMovieGenre"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="9dp"
         android:layout_marginTop="2dp"
         android:fontFamily="@font/roboto_light"
         android:text="Genre: Action, Horror"
         android:textAppearance="@style/TextAppearance.AppCompat.Small"
         android:textColor="@color/md_white_1000"
         android:textSize="12sp"
-        app:layout_constraintStart_toStartOf="@+id/wlMovieTitle"
+        app:layout_constraintEnd_toStartOf="@+id/wlCheckBox"
+        app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toBottomOf="@+id/wlMovieTitle" />
 
     <TextView

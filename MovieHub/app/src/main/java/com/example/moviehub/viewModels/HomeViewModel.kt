@@ -135,6 +135,22 @@ class HomeViewModel @Inject constructor(
         object Empty: DiscoverMovieEvent()
     }
 
+    sealed class GetMovieWatchlistEvent {
+        class Success(val resultText: String): GetMovieWatchlistEvent()
+        class Failure(val errorText: String): GetMovieWatchlistEvent()
+        class Exception(val exceptionText: String): GetMovieWatchlistEvent()
+        object Loading: GetMovieWatchlistEvent()
+        object Empty: GetMovieWatchlistEvent()
+    }
+
+    sealed class GetShowWatchlistEvent {
+        class Success(val resultText: String): GetShowWatchlistEvent()
+        class Failure(val errorText: String): GetShowWatchlistEvent()
+        class Exception(val exceptionText: String): GetShowWatchlistEvent()
+        object Loading: GetShowWatchlistEvent()
+        object Empty: GetShowWatchlistEvent()
+    }
+
     private val _getTrendingMoviesByPageResponse = MutableStateFlow<GetTrendingMoviesByPageEvent>(GetTrendingMoviesByPageEvent.Empty)
     val getTrendingMoviesByPageResponse: StateFlow<GetTrendingMoviesByPageEvent> = _getTrendingMoviesByPageResponse
 
@@ -177,8 +193,18 @@ class HomeViewModel @Inject constructor(
     private val _removeShowFromWatchlistResponse = MutableStateFlow<RemoveShowFromWatchlistEvent>(RemoveShowFromWatchlistEvent.Empty)
     val removeShowFromWatchlistResponse: StateFlow<RemoveShowFromWatchlistEvent> = _removeShowFromWatchlistResponse
 
+    private val _getMovieWatchlistResponse = MutableStateFlow<GetMovieWatchlistEvent>(GetMovieWatchlistEvent.Empty)
+    val getMovieWatchlistResponse: StateFlow<GetMovieWatchlistEvent> = _getMovieWatchlistResponse
+
+    private val _getShowWatchlistResponse = MutableStateFlow<GetShowWatchlistEvent>(GetShowWatchlistEvent.Empty)
+    val getShowWatchlistResponse: StateFlow<GetShowWatchlistEvent> = _getShowWatchlistResponse
+
     var movieList = arrayListOf<MediaBody>()
     var showList = arrayListOf<MediaBody>()
+
+    var movieWatchList = arrayListOf<MediaBody>()
+    var showWatchList = arrayListOf<MediaBody>()
+
     var baseImageUrl: String? = null
     var imageSizes = arrayListOf<String>()
     var movieGenres: GenreModel? = null
@@ -437,6 +463,15 @@ class HomeViewModel @Inject constructor(
                             }
                         }
 
+                        movieWatchList.find { it.id == movieId }?.providers = response.data
+                        movieWatchList.find { it.id == movieId }?.providers?.results?.let {
+                            it.CA?.flatrate?.let { providers ->
+                                for (provider in providers) {
+                                    provider.logo_path = "${baseImageUrl}${imageSizes[6]}${provider.logo_path}"
+                                }
+                            }
+                        }
+
                         _getMovieProvidersResponse.value = GetMovieProvidersEvent.Success("Movie Providers Retrieved")
                     }
                     is Resource.Error -> _getMovieProvidersResponse.value = GetMovieProvidersEvent.Failure(response.message!!)
@@ -496,4 +531,37 @@ class HomeViewModel @Inject constructor(
             }else _discoverMovieResponse.value = DiscoverMovieEvent.Failure("No internet connection")
         }
     }
+
+    fun getMovieWatchlist(username: String){
+        viewModelScope.launch(dispatchers.io){
+            _getMovieWatchlistResponse.value = GetMovieWatchlistEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = userRepository.getMovieWatchlist(username)){
+                    is Resource.Success -> {
+                        movieWatchList = response.data!!.results
+                        _getMovieWatchlistResponse.value = GetMovieWatchlistEvent.Success("Got Movie Watchlist")
+                    }
+                    is Resource.Error -> _getMovieWatchlistResponse.value = GetMovieWatchlistEvent.Failure(response.message!!)
+                    is Resource.Exception -> _getMovieWatchlistResponse.value = GetMovieWatchlistEvent.Exception(response.message!!)
+                }
+            }else _getMovieWatchlistResponse.value = GetMovieWatchlistEvent.Failure("No internet connection")
+        }
+    }
+
+    fun getShowWatchlist(username: String){
+        viewModelScope.launch(dispatchers.io){
+            _getShowWatchlistResponse.value = GetShowWatchlistEvent.Loading
+            if(networkHelper.isNetworkConnected()){
+                when(val response = userRepository.getShowWatchlist(username)){
+                    is Resource.Success -> {
+                        showWatchList = response.data!!.results
+                        _getShowWatchlistResponse.value = GetShowWatchlistEvent.Success("Got Show Watchlist")
+                    }
+                    is Resource.Error -> _getShowWatchlistResponse.value = GetShowWatchlistEvent.Failure(response.message!!)
+                    is Resource.Exception -> _getShowWatchlistResponse.value = GetShowWatchlistEvent.Exception(response.message!!)
+                }
+            }else _getShowWatchlistResponse.value = GetShowWatchlistEvent.Failure("No internet connection")
+        }
+    }
+
 }
