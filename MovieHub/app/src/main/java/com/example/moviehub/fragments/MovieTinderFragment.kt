@@ -45,8 +45,8 @@ class MovieTinderFragment : Fragment() {
         Timber.d("share ${sharedViewModel.movieList}")
         movieArray = sharedViewModel.movieList
         showArray = sharedViewModel.showList
-        mediaArray.addAll(movieArray)
-        arrayAdapter = MovieTinderAdapter(requireContext(),R.layout.movie_tinder_item, mediaArray)
+//        mediaArray.addAll(movieArray)
+        arrayAdapter = MovieTinderAdapter(requireContext(),R.layout.movie_tinder_item, movieArray)
 
     }
 
@@ -72,9 +72,8 @@ class MovieTinderFragment : Fragment() {
                         viewModel.selectedTab = 0
                         Toast.makeText(requireContext(), "You Hit Movies Tab!", Toast.LENGTH_SHORT).show()
 
-                        mediaArray.clear()
-                        mediaArray.addAll(movieArray)
-                        arrayAdapter?.notifyDataSetChanged()
+                        arrayAdapter = MovieTinderAdapter(requireContext(),R.layout.movie_tinder_item, movieArray)
+                        binding.frame.adapter = arrayAdapter
                         binding.frame.topCardListener.selectLeft()
 
                     }
@@ -82,9 +81,8 @@ class MovieTinderFragment : Fragment() {
                         viewModel.selectedTab = 1
                         Toast.makeText(requireContext(), "You Hit TV Shows Tab!", Toast.LENGTH_SHORT).show()
 
-                        mediaArray.clear()
-                        mediaArray.addAll(showArray)
-                        arrayAdapter?.notifyDataSetChanged()
+                        arrayAdapter = MovieTinderAdapter(requireContext(),R.layout.movie_tinder_item, showArray)
+                        binding.frame.adapter = arrayAdapter
                         binding.frame.topCardListener.selectLeft()
 
                     }
@@ -98,7 +96,7 @@ class MovieTinderFragment : Fragment() {
 
         //Start adapter as movie adapter
         binding.frame.adapter = arrayAdapter
-        lastItem = mediaArray[0]
+//        lastItem = mediaArray[0]
 
         binding.mtLikeBTN.setOnClickListener{
             binding.frame.topCardListener.selectRight()
@@ -111,13 +109,15 @@ class MovieTinderFragment : Fragment() {
         binding.frame.setFlingListener(object : SwipeFlingAdapterView.onFlingListener {
             override fun removeFirstObjectInAdapter() {
                 // this is the simplest way to delete an object from the Adapter (/AdapterView)
-                    lastItem = mediaArray.removeAt(0)
-                    arrayAdapter?.notifyDataSetChanged()
+//                    lastItem = mediaArray.removeAt(0)
+//                    arrayAdapter?.notifyDataSetChanged()
 
-                    if (lastItem.media_type == "movie"){
-                        movieArray.removeAt(0)
+                    if (viewModel.selectedTab == 0){
+                        lastItem = movieArray.removeAt(0)
+                        arrayAdapter?.notifyDataSetChanged()
                     } else {
-                        showArray.removeAt(0)
+                        lastItem = showArray.removeAt(0)
+                        arrayAdapter?.notifyDataSetChanged()
                     }
 
             }
@@ -133,11 +133,18 @@ class MovieTinderFragment : Fragment() {
             override fun onRightCardExit(p0: Any?) {
                 //TODO: Add to Watchlist
                 Toast.makeText(requireContext(), "Right!", Toast.LENGTH_SHORT).show()
-                if (mediaArray[0].media_type == "m") {
+                if (viewModel.selectedTab == 0) {
                     viewModel.addMovieToWatchlist("Slayer42069", lastItem.id)
                 } else {
                     viewModel.addShowToWatchlist("Slayer42069", lastItem.id)
                 }
+//
+//                if (mediaArray[0].media_type == "m") {
+//                    viewModel.addMovieToWatchlist("Slayer42069", lastItem.id)
+//                } else {
+//                    viewModel.addShowToWatchlist("Slayer42069", lastItem.id)
+//                }
+
 
 
             }

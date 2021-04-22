@@ -11,6 +11,8 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.moviehub.adapters.DetailsLogoAdapter
+import com.example.moviehub.adapters.FilterProvidersAdapter
 import com.example.moviehub.adapters.MainRecyclerAdapter
 import com.example.moviehub.databinding.FragmentHomeBinding
 import com.example.moviehub.models.AllCategory
@@ -35,6 +37,7 @@ class HomeFragment : Fragment(){
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private var mainRecyclerAdapter : MainRecyclerAdapter? = null
+    private var logoAdapter = FilterProvidersAdapter(ArrayList())
     private val categoryMovieList: ArrayList<AllCategory> = ArrayList()
     private val categoryShowList: ArrayList<AllCategory> = ArrayList()
 
@@ -56,6 +59,8 @@ class HomeFragment : Fragment(){
 
         viewModel.getBaseImageUrl()
         viewModel.getMovieGenres()
+
+
     }
 
     override fun onCreateView(
@@ -67,6 +72,8 @@ class HomeFragment : Fragment(){
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(activity)
 
         binding.homeTabLayout.getTabAt(viewModel.selectedTab)?.select()
+
+        binding.filterview.visibility = View.GONE
 
         return binding.root
     }
@@ -106,6 +113,11 @@ class HomeFragment : Fragment(){
             true
         }
 
+        binding.filterButton.setOnClickListener{
+
+            binding.filterview.visibility = if (binding.filterview.visibility == View.VISIBLE) View.GONE else View.VISIBLE
+
+        }
 
     }
 

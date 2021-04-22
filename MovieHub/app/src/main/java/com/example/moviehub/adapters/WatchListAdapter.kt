@@ -35,7 +35,7 @@ class WatchListAdapter(
                     genres = "$genres$item, "
                 }
             }
-            binding.wlMovieTitle.text = watchListItem.title
+            binding.wlMovieTitle.text = if (watchListItem.title.isNullOrEmpty()) watchListItem.name else watchListItem.title
             binding.wlMovieGenre.text = genres
             binding.wlImage.load(watchListItem.poster_path)
 
