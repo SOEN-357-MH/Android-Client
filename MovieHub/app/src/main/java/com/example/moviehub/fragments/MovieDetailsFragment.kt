@@ -78,11 +78,15 @@ class MovieDetailsFragment : Fragment() {
         }()
 
         binding.watchlistButton.setOnClickListener {
-            if (args.mediaBody.media_type.equals("m")) addMovieToWatchlist(
-                "Slayer42069",
-                args.mediaBody.id
-            )
-            else addShowToWatchlist("Slayer42069", args.mediaBody.id)
+            if (args.mediaBody.id != null) {
+                val type = args.mediaBody.media_type
+                println(type)
+                if (args.mediaBody.media_type.equals("m")) addMovieToWatchlist(
+                    "Slayer42069",
+                    args.mediaBody.id
+                )
+                else addShowToWatchlist("Slayer42069", args.mediaBody.id)
+            }
         }
 
         // Inflate the layout for this fragment
