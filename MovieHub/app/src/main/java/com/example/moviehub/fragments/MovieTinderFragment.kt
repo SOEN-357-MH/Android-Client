@@ -133,7 +133,7 @@ class MovieTinderFragment : Fragment() {
             override fun onRightCardExit(p0: Any?) {
                 //TODO: Add to Watchlist
                 Toast.makeText(requireContext(), "Right!", Toast.LENGTH_SHORT).show()
-                if (mediaArray[0].media_type == "movie") {
+                if (mediaArray[0].media_type == "m") {
                     viewModel.addMovieToWatchlist("Slayer42069", lastItem.id)
                 } else {
                     viewModel.addShowToWatchlist("Slayer42069", lastItem.id)
