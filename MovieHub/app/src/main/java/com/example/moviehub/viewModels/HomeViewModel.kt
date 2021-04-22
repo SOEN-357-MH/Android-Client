@@ -1,5 +1,7 @@
 package com.example.moviehub.viewModels
 
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.moviehub.helpers.NetworkHelper
@@ -489,6 +491,15 @@ class HomeViewModel @Inject constructor(
                     is Resource.Success -> {
                         showList.find { it.id == showId }?.providers = response.data
                         showList.find { it.id == showId }?.providers?.results?.let {
+                            it.CA?.flatrate?.let { providers ->
+                                for (provider in providers) {
+                                    provider.logo_path = "${baseImageUrl}${imageSizes[6]}${provider.logo_path}"
+                                }
+                            }
+                        }
+
+                        showWatchList.find { it.id == showId }?.providers = response.data
+                        showWatchList.find { it.id == showId }?.providers?.results?.let {
                             it.CA?.flatrate?.let { providers ->
                                 for (provider in providers) {
                                     provider.logo_path = "${baseImageUrl}${imageSizes[6]}${provider.logo_path}"

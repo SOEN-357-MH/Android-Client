@@ -30,10 +30,15 @@ class MovieListFragment : Fragment() {
     private val viewModel: HomeViewModel by viewModels()
     private var watchListAdapter : WatchListAdapter? = null
 
+    private var movieWatchlist: ArrayList<MediaBody> = ArrayList()
+    private var showWatchlist: ArrayList<MediaBody> = ArrayList()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         observeMovieWatchList()
+        //observeShowWatchList()
         viewModel.getImageSizes()
+        viewModel.getBaseImageUrl()
 
     }
 
@@ -48,7 +53,7 @@ class MovieListFragment : Fragment() {
         binding.tabLayout.getTabAt(viewModel.selectedTab)?.select()
 
         viewModel.getMovieWatchlist("Slayer42069")
-        //viewModel.getShowWatchlist("Slayer42069")
+        viewModel.getShowWatchlist("Slayer42069")
 
         return binding.root
     }
@@ -63,13 +68,15 @@ class MovieListFragment : Fragment() {
                     "Movies" -> {
                         Timber.d("movie selected")
                         viewModel.selectedTab = 0
-                        watchListAdapter = WatchListAdapter(requireContext(), viewModel.movieWatchList)
+                        movieWatchlist = viewModel.movieWatchList
+                        watchListAdapter = WatchListAdapter(requireContext(), movieWatchlist)
                         binding.mlRecyclerView.adapter = watchListAdapter
                     }
                     "TV Shows" -> {
                         viewModel.selectedTab = 1
-                        watchListAdapter = WatchListAdapter(requireContext(), viewModel.showWatchList)
-                        binding.mlRecyclerView.adapter = watchListAdapter
+//                        showWatchlist = viewModel.showWatchList
+//                        watchListAdapter = WatchListAdapter(requireContext(), showWatchlist)
+//                        binding.mlRecyclerView.adapter = watchListAdapter
                     }
                 }
             }
@@ -78,16 +85,7 @@ class MovieListFragment : Fragment() {
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
-        watchListAdapter?.stateRestorationPolicy= RecyclerView.Adapter.StateRestorationPolicy.PREVENT_WHEN_EMPTY
         binding.mlRecyclerView.adapter = watchListAdapter
-
-        postponeEnterTransition()
-
-        binding.mlRecyclerView.viewTreeObserver.addOnPreDrawListener {
-            startPostponedEnterTransition()
-            true
-        }
-
 
     }
 
@@ -108,7 +106,7 @@ class MovieListFragment : Fragment() {
                             viewModel.getMovieProviders(movie.id)
                         }
 
-                        watchListAdapter = WatchListAdapter(requireContext(), viewModel.showWatchList)
+                        watchListAdapter = WatchListAdapter(requireContext(), viewModel.movieWatchList)
                         binding.mlRecyclerView.adapter = watchListAdapter
 
                     }
@@ -117,6 +115,32 @@ class MovieListFragment : Fragment() {
 
                     }
                     is HomeViewModel.GetMovieWatchlistEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
+                    else -> Unit
+                }
+            }
+        }
+    }
+
+    private fun observeShowWatchList(){
+        lifecycleScope.launchWhenStarted {
+            viewModel.getShowWatchlistResponse.collect { event ->
+                when(event){
+                    is HomeViewModel.GetShowWatchlistEvent.Success -> {
+                        for (movie in viewModel.movieWatchList) {
+                            movie.poster_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.poster_path}"
+                            movie.backdrop_path = "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${movie.backdrop_path}"
+                            viewModel.getShowProviders(movie.id)
+                        }
+
+                        watchListAdapter = WatchListAdapter(requireContext(), viewModel.showWatchList)
+                        binding.mlRecyclerView.adapter = watchListAdapter
+
+                    }
+                    is HomeViewModel.GetShowWatchlistEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
+                    is HomeViewModel.GetShowWatchlistEvent.Loading -> {
+
+                    }
+                    is HomeViewModel.GetShowWatchlistEvent.Exception -> Toast.makeText(requireContext(), event.exceptionText, Toast.LENGTH_SHORT).show()
                     else -> Unit
                 }
             }

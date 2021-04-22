@@ -36,7 +36,7 @@ interface MainApiService {
     @GET("account/user/{username}/watchlist/movie")
     suspend fun getMovieWatchlist(@Path("username") username: String): Response<ResultBody>
 
-    @GET("account/user/{username}/watchlist/show}")
+    @GET("account/user/{username}/watchlist/show")
     suspend fun getShowWatchlist(@Path("username") username: String): Response<ResultBody>
 
     /***

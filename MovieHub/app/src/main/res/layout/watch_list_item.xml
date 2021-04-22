@@ -104,7 +104,7 @@
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="2dp"
         android:buttonTint="#FF9900"
-        android:checked="true"
+        android:checked="false"
         android:gravity="center"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toEndOf="parent"
