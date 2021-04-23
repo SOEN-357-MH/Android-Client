@@ -5,26 +5,38 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <ImageView
-        android:id="@+id/liLogo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:maxHeight="40dp"
-        android:scaleType="fitXY"
-        app:layout_constraintStart_toStartOf="parent"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/containercardView"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/placeholder_icon" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:cardCornerRadius="6dp"
+        android:layout_marginStart="5dp"
+        android:elevation="10dp">
+
+        <ImageView
+            android:id="@+id/liLogo"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:maxHeight="40dp"
+            android:scaleType="fitXY"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/placeholder_icon"/>
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/liName"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:maxHeight="40dp"
         android:text="Provider Name"
-        android:scaleType="fitXY"
-        app:layout_constraintStart_toEndOf="@+id/liLogo"
+        android:gravity="center_vertical"
+        app:layout_constraintStart_toEndOf="@+id/containercardView"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@drawable/placeholder_icon" />
 </androidx.constraintlayout.widget.ConstraintLayout>

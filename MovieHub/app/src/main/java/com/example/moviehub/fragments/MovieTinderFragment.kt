@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import timber.log.Timber
 
 @AndroidEntryPoint
-class MovieTinderFragment : Fragment() {
+class MovieTinderFragment : Fragment(){
 
     private var _binding: FragmentMovieTinderBinding? = null
     private val binding get() = _binding!!
@@ -90,7 +90,9 @@ class MovieTinderFragment : Fragment() {
             }
 
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabUnselected(tab: TabLayout.Tab?) {
+
+            }
             override fun onTabReselected(tab: TabLayout.Tab?) {}
         })
 
@@ -107,6 +109,8 @@ class MovieTinderFragment : Fragment() {
         }
 
         binding.frame.setFlingListener(object : SwipeFlingAdapterView.onFlingListener {
+
+
             override fun removeFirstObjectInAdapter() {
                 // this is the simplest way to delete an object from the Adapter (/AdapterView)
 //                    lastItem = mediaArray.removeAt(0)

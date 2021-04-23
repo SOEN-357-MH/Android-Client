@@ -1,12 +1,15 @@
 package com.example.moviehub.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.example.moviehub.databinding.LogosItemBinding
 import com.example.moviehub.databinding.ProvidersItemBinding
+import com.example.moviehub.databinding.WatchListItemBinding
 import com.example.moviehub.models.AdModel
+import com.example.moviehub.models.MediaBody
 
 class FilterProvidersAdapter(
     private val providers: ArrayList<AdModel>) : RecyclerView.Adapter<FilterProvidersAdapter.FilterProvidersViewHolder>() {
@@ -34,6 +37,12 @@ class FilterProvidersAdapter(
     }
 
     override fun getItemCount(): Int = providers.size
+
+    private fun createOnClickListener(binding : WatchListItemBinding, providerItem: MediaBody): View.OnClickListener {
+        return View.OnClickListener {
+
+        }
+    }
 
 
 }

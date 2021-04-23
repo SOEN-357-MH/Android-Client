@@ -37,7 +37,7 @@ class HomeFragment : Fragment(){
     private val sharedViewModel: SharedViewModel by activityViewModels()
 
     private var mainRecyclerAdapter : MainRecyclerAdapter? = null
-    private var filterAdapter = FilterProvidersAdapter(ArrayList())
+    private var filterAdapter : FilterProvidersAdapter? = null
     private val categoryMovieList: ArrayList<AllCategory> = ArrayList()
     private val categoryShowList: ArrayList<AllCategory> = ArrayList()
 
@@ -47,7 +47,6 @@ class HomeFragment : Fragment(){
         observeTrendingMoviesByPage()
         observeGenreShowsByPage()
         observeGenreMoviesByPage()
-
 
         observeTrendingShowsByPage()
         observeBaseImageUrl()
@@ -60,8 +59,6 @@ class HomeFragment : Fragment(){
         viewModel.getBaseImageUrl()
         viewModel.getMovieGenres()
 
-
-
     }
 
     override fun onCreateView(
@@ -71,13 +68,12 @@ class HomeFragment : Fragment(){
         _binding = FragmentHomeBinding.inflate(inflater,container,false)
 
         binding.homeRecyclerView.layoutManager = LinearLayoutManager(activity)
-
         binding.homeTabLayout.getTabAt(viewModel.selectedTab)?.select()
-
         binding.filterview.visibility = View.GONE
 
-        viewModel.populateProviders()
         filterAdapter = FilterProvidersAdapter(viewModel.providers)
+        Toast.makeText(requireContext(), viewModel.providers.size.toString(), Toast.LENGTH_SHORT).show()
+
         binding.FiltersRV.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         binding.FiltersRV.adapter = filterAdapter
 
@@ -142,7 +138,7 @@ class HomeFragment : Fragment(){
                         categoryMovieList.add(AllCategory("Trending Movies", viewModel.movieList))
                         mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryMovieList)
                         binding.homeRecyclerView.adapter = mainRecyclerAdapter
-                        viewModel.getTrendingShowsByPage(1)
+                        viewModel.getTrendingShowsByPage(15)
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
                     is HomeViewModel.GetTrendingMoviesByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
@@ -311,7 +307,7 @@ class HomeFragment : Fragment(){
                 when(event){
                     is HomeViewModel.GetImageSizesEvent.Success -> {
                         Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
-                        viewModel.getTrendingMoviesByPage(1)
+                        viewModel.getTrendingMoviesByPage(15)
 
                         viewModel.getGenreShowsByPage(10, "10759")
                         viewModel.getGenreShowsByPage(11, "10759")
@@ -441,7 +437,5 @@ class HomeFragment : Fragment(){
         super.onDestroyView()
         _binding = null
     }
-
-
 
 }

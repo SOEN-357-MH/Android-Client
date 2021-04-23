@@ -5,10 +5,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.example.moviehub.databinding.MovieRowItemsBinding
 import com.example.moviehub.databinding.WatchListItemBinding
+import com.example.moviehub.fragments.HomeFragmentDirections
 import com.example.moviehub.models.MediaBody
 
 
@@ -22,10 +28,12 @@ class WatchListAdapter(
     private var selectedPosition = -1
 
 
-    inner class WatchListViewHolder(val binding: WatchListItemBinding, private val onCheckedListener: OnCheckedListener) :
+    inner class WatchListViewHolder(val binding: WatchListItemBinding, val onCheckedListener: OnCheckedListener) :
         RecyclerView.ViewHolder(binding.root), CompoundButton.OnCheckedChangeListener {
 
+
         fun bind(watchListItem: MediaBody) {
+
 
             var genres = "Genres: "
             if (watchListItem != null && watchListItem.genres != null) {
@@ -55,6 +63,7 @@ class WatchListAdapter(
                 binding.wlAdult.visibility = View.GONE
             }
 
+            binding.wlCheckBox.setOnCheckedChangeListener(this)
 
             if (binding.wlCheckBox.isChecked) {
                 // What happens when checked
@@ -63,13 +72,18 @@ class WatchListAdapter(
                 binding.wlWatchedTV.visibility = View.GONE
             }
 
-
         }
 
         override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-            binding.wlCheckBox.isClickable = false
+            binding.wlCheckBox.isClickable = true
             selectedPosition = layoutPosition
             onCheckedListener.onCheck(selectedPosition, isChecked)
+
+            Toast.makeText(
+                context,
+                "CHECKED ADAPTER",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 

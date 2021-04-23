@@ -38,8 +38,8 @@ class MovieListFragment : Fragment(), WatchListAdapter.OnCheckedListener {
         super.onCreate(savedInstanceState)
         viewModel.getImageSizes()
         viewModel.getBaseImageUrl()
-        observeMovieWatchList()
         observeShowWatchList()
+        observeMovieWatchList()
         watchListAdapter = WatchListAdapter(requireContext(), ArrayList(), this)
     }
 
@@ -53,8 +53,10 @@ class MovieListFragment : Fragment(), WatchListAdapter.OnCheckedListener {
 
         binding.tabLayout.getTabAt(viewModel.selectedTab)?.select()
 
-        viewModel.getMovieWatchlist("Slayer42069")
         viewModel.getShowWatchlist("Slayer42069")
+        viewModel.getMovieWatchlist("Slayer42069")
+
+
 
         return binding.root
     }
@@ -99,7 +101,8 @@ class MovieListFragment : Fragment(), WatchListAdapter.OnCheckedListener {
     override fun onCheck(position: Int, isChecked: Boolean) {
         selectedPos = position
         if (isChecked) {
-            // checked
+            movieWatchlist.add(movieWatchlist.removeAt(position))
+            watchListAdapter?.notifyItemRemoved(position)
 
         }else{
             // unchecked
@@ -179,6 +182,7 @@ class MovieListFragment : Fragment(), WatchListAdapter.OnCheckedListener {
             }
         }
     }
+
 
 
 

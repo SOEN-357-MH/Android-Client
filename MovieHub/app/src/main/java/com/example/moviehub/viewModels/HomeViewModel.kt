@@ -479,6 +479,7 @@ class HomeViewModel @Inject constructor(
                 when (val response = repository.getImageSizes()) {
                     is Resource.Success -> {
                         imageSizes = response.data!!
+                        populateProviders()
                         _getImageSizeResponse.value =
                             GetImageSizesEvent.Success("Image Size Retrieved")
                     }
@@ -722,12 +723,33 @@ class HomeViewModel @Inject constructor(
             "Club Illico",
             "ILLICO")
 
-        providers.forEachIndexed { index, s ->
-            providers.add(AdModel(0,"", ids[index], names[index] ))
+        var links: List<String> = listOf("/q6tl6Ib6X5FT80RMlcDbexIo4St.jpg",
+        "/p3Z12gKq2qvJaUOMeKNU2mzKVI9.jpg",
+        "/9A1JSVmSxsyaBK4SUFsYVqbAYfW.jpg",
+        "/sVBEF7q7LqjHAWSnKwDbzmr2EMY.jpg",
+        "/paq2o2dIfQnxcERsVoq7Ys8KYz8.jpg",
+        "/kwCsPIK3KA1YTXq7XxXaVDhTxLY.jpg",
+        "/68MNrwlkpF7WnmNPXLah69CR5cb.jpg",
+        "/xEWgUq2tJyggisxbJ3fNOV9Inj2.jpg",
+        "/4CQeOt3H52x1Uo6ulO5RvbbP21Z.jpg",
+        "/vDCcryHD32b0yMeSCgBhuYavsmx.jpg",
+        "/3U0t5JMFgd2qFZrcqRt5q8Y5Soy.jpg",
+        "/n7C8QWkrjGIz3nWHI4P30nWARAs.jpg",
+        "/vlrNqT2tFHRY6oGh1Bt7HIOHsjF.jpg",
+        "/oswPTkUarKavsbi4Ec3b3SgqZ29.jpg",
+        "/645d5qpsT02a1s3lBZugN8454ad.jpg",
+        "/dgPueyEdOwpQ10fjuhL2WYFQwQs.jpg",
+        "/asiUYklwXjWJ7Gjobe5QSscDzQe.jpg",
+        "/jYE7sFwha5HFSxWcTlyU3BQrcP2.jpg",
+        "/A3WLxoSkmuxwaQkpfwL6H8WwWwM.jpg",
+        "/xTjpCwl6RfpeSZbB9yI837kW1v7.jpg",
+        "/nqOk5WIF1IalIgKdF120fP10boq.jpg",
+        "/mK7Au1go2M5MqyZ8CjkpJPM6Apb.jpg",
+        "/1ssJ1YTw7WT7BuBG9fh6yJ94tZl.jpg)")
+
+        ids.forEachIndexed { index, s ->
+            providers.add(AdModel(0,"${baseImageUrl}${imageSizes[6]}${links[index]}", ids[index], names[index] ))
         }
-
-
-
 
     }
 
