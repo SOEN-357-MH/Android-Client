@@ -4,28 +4,26 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.RadioGroup
-import androidx.navigation.findNavController
-import androidx.navigation.fragment.FragmentNavigatorExtras
+import android.widget.CompoundButton
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
-import com.example.moviehub.databinding.MovieRowItemsBinding
 import com.example.moviehub.databinding.WatchListItemBinding
-import com.example.moviehub.fragments.HomeFragmentDirections
 import com.example.moviehub.models.MediaBody
 
 
 class WatchListAdapter(
     private val context: Context,
-    private val watchList: ArrayList<MediaBody>
-) :
+    private val watchList: ArrayList<MediaBody>,
+    private val onCheckedListener: OnCheckedListener) :
     RecyclerView.Adapter<WatchListAdapter.WatchListViewHolder>() {
 
     private var logoAdapter = DetailsLogoAdapter(ArrayList())
+    private var selectedPosition = -1
 
-    inner class WatchListViewHolder(val binding: WatchListItemBinding) :
-        RecyclerView.ViewHolder(binding.root) {
+
+    inner class WatchListViewHolder(val binding: WatchListItemBinding, private val onCheckedListener: OnCheckedListener) :
+        RecyclerView.ViewHolder(binding.root), CompoundButton.OnCheckedChangeListener {
 
         fun bind(watchListItem: MediaBody) {
 
@@ -67,6 +65,16 @@ class WatchListAdapter(
 
 
         }
+
+        override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+            binding.wlCheckBox.isClickable = false
+            selectedPosition = layoutPosition
+            onCheckedListener.onCheck(selectedPosition, isChecked)
+        }
+    }
+
+    interface OnCheckedListener{
+        fun onCheck(position: Int, isChecked: Boolean)
     }
 
     override fun onCreateViewHolder(
@@ -78,7 +86,7 @@ class WatchListAdapter(
                 LayoutInflater.from(
                     parent.context
                 ), parent, false
-            )
+            ), onCheckedListener
         )
 
     }

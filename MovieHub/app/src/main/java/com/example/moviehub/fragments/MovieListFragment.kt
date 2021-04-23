@@ -22,13 +22,14 @@ import kotlinx.coroutines.flow.collect
 import timber.log.Timber
 
 @AndroidEntryPoint
-class MovieListFragment : Fragment() {
+class MovieListFragment : Fragment(), WatchListAdapter.OnCheckedListener {
 
     private var _binding: FragmentMovieListBinding? = null
     private val binding get() = _binding!!
 
     private val viewModel: HomeViewModel by viewModels()
     private var watchListAdapter: WatchListAdapter? = null
+    private var selectedPos = -1
 
     private var movieWatchlist: ArrayList<MediaBody> = ArrayList()
     private var showWatchlist: ArrayList<MediaBody> = ArrayList()
@@ -39,6 +40,7 @@ class MovieListFragment : Fragment() {
         viewModel.getBaseImageUrl()
         observeMovieWatchList()
         observeShowWatchList()
+        watchListAdapter = WatchListAdapter(requireContext(), ArrayList(), this)
     }
 
     override fun onCreateView(
@@ -68,13 +70,13 @@ class MovieListFragment : Fragment() {
                         Timber.d("movie selected")
                         viewModel.selectedTab = 0
                         movieWatchlist = viewModel.movieWatchList
-                        watchListAdapter = WatchListAdapter(requireContext(), movieWatchlist)
+                        watchListAdapter = WatchListAdapter(requireContext(), movieWatchlist, this@MovieListFragment)
                         binding.mlRecyclerView.adapter = watchListAdapter
                     }
                     "TV Shows" -> {
                         viewModel.selectedTab = 1
                         showWatchlist = viewModel.showWatchList
-                        watchListAdapter = WatchListAdapter(requireContext(), showWatchlist)
+                        watchListAdapter = WatchListAdapter(requireContext(), showWatchlist,this@MovieListFragment)
                         binding.mlRecyclerView.adapter = watchListAdapter
                     }
                 }
@@ -94,6 +96,17 @@ class MovieListFragment : Fragment() {
         _binding = null
     }
 
+    override fun onCheck(position: Int, isChecked: Boolean) {
+        selectedPos = position
+        if (isChecked) {
+            // checked
+
+        }else{
+            // unchecked
+
+        }
+    }
+
     private fun observeMovieWatchList() {
         lifecycleScope.launchWhenStarted {
             viewModel.getMovieWatchlistResponse.collect { event ->
@@ -107,7 +120,7 @@ class MovieListFragment : Fragment() {
                                 viewModel.getMovieProviders(movie.id)
                             }
                         watchListAdapter =
-                            WatchListAdapter(requireContext(), viewModel.movieWatchList)
+                            WatchListAdapter(requireContext(), viewModel.movieWatchList, this@MovieListFragment)
                         binding.mlRecyclerView.adapter = watchListAdapter
 
                     }
@@ -144,7 +157,7 @@ class MovieListFragment : Fragment() {
                             }
 
                         watchListAdapter =
-                            WatchListAdapter(requireContext(), viewModel.showWatchList)
+                            WatchListAdapter(requireContext(), viewModel.showWatchList,this@MovieListFragment)
                         binding.mlRecyclerView.adapter = watchListAdapter
 
                     }
@@ -166,5 +179,7 @@ class MovieListFragment : Fragment() {
             }
         }
     }
+
+
 
 }
