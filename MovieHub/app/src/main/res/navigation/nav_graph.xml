@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/loginFragment">
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.moviehub.fragments.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" >
+        <action
+            android:id="@+id/action_registerFragment_to_Home"
+            app:destination="@id/Home" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.moviehub.fragments.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login" >
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_homeFragment"
+            app:destination="@id/Home" />
+        <action
+            android:id="@+id/action_loginFragment_to_movieTinderFragment"
+            app:destination="@id/Discover" />
+    </fragment>
+    <fragment
+        android:id="@+id/Home"
+        android:name="com.example.moviehub.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/Discover"
+        android:name="com.example.moviehub.fragments.MovieTinderFragment"
+        android:label="fragment_movie_tinder"
+        tools:layout="@layout/fragment_movie_tinder" />
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="com.example.moviehub.fragments.MovieDetailsFragment"
+        android:label="fragment_movie_details"
+        tools:layout="@layout/fragment_movie_details" >
+        <argument
+            android:name="mediaBody"
+            app:argType="com.example.moviehub.models.MediaBody" />
+    </fragment>
+    <fragment
+        android:id="@+id/List"
+        android:name="com.example.moviehub.fragments.MovieListFragment"
+        android:label="fragment_movie_list"
+        tools:layout="@layout/fragment_movie_list" />
+</navigation>
