@@ -16,6 +16,7 @@ import com.example.moviehub.databinding.MovieRowItemsBinding
 import com.example.moviehub.databinding.WatchListItemBinding
 import com.example.moviehub.fragments.HomeFragmentDirections
 import com.example.moviehub.models.MediaBody
+import timber.log.Timber
 
 
 class WatchListAdapter(
@@ -27,13 +28,13 @@ class WatchListAdapter(
     private var logoAdapter = DetailsLogoAdapter(ArrayList())
     private var selectedPosition = -1
 
-
     inner class WatchListViewHolder(val binding: WatchListItemBinding, val onCheckedListener: OnCheckedListener) :
         RecyclerView.ViewHolder(binding.root), CompoundButton.OnCheckedChangeListener {
 
 
         fun bind(watchListItem: MediaBody) {
 
+            binding.wlCheckBox.setOnCheckedChangeListener(this)
 
             var genres = "Genres: "
             if (watchListItem != null && watchListItem.genres != null) {
@@ -41,6 +42,9 @@ class WatchListAdapter(
                     genres = "$genres$item, "
                 }
             }
+
+            Timber.d(watchListItem.isWatched.toString())
+
             binding.wlMovieTitle.text = if (watchListItem.title.isNullOrEmpty()) watchListItem.name else watchListItem.title
             binding.wlMovieGenre.text = genres
             binding.wlImage.load(watchListItem.poster_path)
@@ -63,8 +67,6 @@ class WatchListAdapter(
                 binding.wlAdult.visibility = View.GONE
             }
 
-            binding.wlCheckBox.setOnCheckedChangeListener(this)
-
             if (binding.wlCheckBox.isChecked) {
                 // What happens when checked
                 binding.wlWatchedTV.visibility = View.VISIBLE
@@ -72,11 +74,14 @@ class WatchListAdapter(
                 binding.wlWatchedTV.visibility = View.GONE
             }
 
+
+
         }
 
         override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
             binding.wlCheckBox.isClickable = false
-            selectedPosition = layoutPosition
+            selectedPosition = adapterPosition
+            watchList[selectedPosition].isWatched = isChecked
             onCheckedListener.onCheck(selectedPosition, isChecked)
 
         }

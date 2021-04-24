@@ -21,4 +21,6 @@ data class MediaBody(
     val first_air_date: String,
     val genres: ArrayList<String>,
     var providers: WatchProviderBody?
-) : Parcelable
+) : Parcelable{
+    var isWatched: Boolean = true
+}

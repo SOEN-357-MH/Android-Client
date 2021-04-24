@@ -221,6 +221,7 @@ class HomeFragment : Fragment(), FilterProvidersAdapter.OnClickedListener{
                                     show.backdrop_path =
                                         "${viewModel.baseImageUrl}${viewModel.imageSizes[6]}${show.backdrop_path}"
                                     viewModel.getShowProviders(show.id)
+                                    show.release_date = show.first_air_date
                                     show.media_type = "s"
                                 }
 

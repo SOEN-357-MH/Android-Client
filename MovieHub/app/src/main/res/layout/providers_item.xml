@@ -12,8 +12,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:cardCornerRadius="6dp"
-        android:layout_marginStart="5dp"
-        android:elevation="10dp">
+        android:layout_marginStart="16dp"
+        android:elevation="10dp"
+        android:layout_marginRight="-13dp">
 
         <ImageView
             android:id="@+id/liLogo"
