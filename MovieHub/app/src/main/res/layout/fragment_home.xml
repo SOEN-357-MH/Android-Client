@@ -69,7 +69,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/homeToolbar"
-        app:tabSelectedTextColor="?attr/colorPrimary"
+        app:tabSelectedTextColor="@color/moviePrimaryOrange"
         app:tabTextColor="@color/md_white_1000">
 
         <com.google.android.material.tabs.TabItem

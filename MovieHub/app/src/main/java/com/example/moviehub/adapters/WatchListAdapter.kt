@@ -75,15 +75,10 @@ class WatchListAdapter(
         }
 
         override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
-            binding.wlCheckBox.isClickable = true
+            binding.wlCheckBox.isClickable = false
             selectedPosition = layoutPosition
             onCheckedListener.onCheck(selectedPosition, isChecked)
 
-            Toast.makeText(
-                context,
-                "CHECKED ADAPTER",
-                Toast.LENGTH_SHORT
-            ).show()
         }
     }
 

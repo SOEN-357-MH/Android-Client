@@ -70,7 +70,7 @@ class MovieTinderFragment : Fragment(){
                     "Movies" -> {
                         Timber.d("movie selected")
                         viewModel.selectedTab = 0
-                        Toast.makeText(requireContext(), "You Hit Movies Tab!", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(requireContext(), "You Hit Movies Tab!", Toast.LENGTH_SHORT).show()
 
                         arrayAdapter = MovieTinderAdapter(requireContext(),R.layout.movie_tinder_item, movieArray)
                         binding.frame.adapter = arrayAdapter
@@ -79,7 +79,7 @@ class MovieTinderFragment : Fragment(){
                     }
                     "TV Shows" -> {
                         viewModel.selectedTab = 1
-                        Toast.makeText(requireContext(), "You Hit TV Shows Tab!", Toast.LENGTH_SHORT).show()
+//                        Toast.makeText(requireContext(), "You Hit TV Shows Tab!", Toast.LENGTH_SHORT).show()
 
                         arrayAdapter = MovieTinderAdapter(requireContext(),R.layout.movie_tinder_item, showArray)
                         binding.frame.adapter = arrayAdapter
@@ -131,16 +131,16 @@ class MovieTinderFragment : Fragment(){
                 //You also have access to the original object.
                 //If you want to use it just cast it (String) dataObject
                 //TODO: Anything? Don't Show again?
-                Toast.makeText(requireContext(), "Left!", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(requireContext(), "Left!", Toast.LENGTH_SHORT).show()
             }
 
             override fun onRightCardExit(p0: Any?) {
                 //TODO: Add to Watchlist
-                Toast.makeText(requireContext(), "Right!", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(requireContext(), "Right!", Toast.LENGTH_SHORT).show()
                 if (viewModel.selectedTab == 0) {
-                    viewModel.addMovieToWatchlist("Slayer42069", lastItem.id)
+                    viewModel.addMovieToWatchlist("thelilgrant", lastItem.id)
                 } else {
-                    viewModel.addShowToWatchlist("Slayer42069", lastItem.id)
+                    viewModel.addShowToWatchlist("thelilgrant", lastItem.id)
                 }
 //
 //                if (mediaArray[0].media_type == "m") {

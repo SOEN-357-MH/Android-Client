@@ -28,7 +28,7 @@ import java.lang.Thread.sleep
 
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(){
+class HomeFragment : Fragment(), FilterProvidersAdapter.OnClickedListener{
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -38,8 +38,8 @@ class HomeFragment : Fragment(){
 
     private var mainRecyclerAdapter : MainRecyclerAdapter? = null
     private var filterAdapter : FilterProvidersAdapter? = null
-    private val categoryMovieList: ArrayList<AllCategory> = ArrayList()
-    private val categoryShowList: ArrayList<AllCategory> = ArrayList()
+    private var categoryMovieList: ArrayList<AllCategory> = ArrayList()
+    private var categoryShowList: ArrayList<AllCategory> = ArrayList()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -71,8 +71,8 @@ class HomeFragment : Fragment(){
         binding.homeTabLayout.getTabAt(viewModel.selectedTab)?.select()
         binding.filterview.visibility = View.GONE
 
-        filterAdapter = FilterProvidersAdapter(viewModel.providers)
-        Toast.makeText(requireContext(), viewModel.providers.size.toString(), Toast.LENGTH_SHORT).show()
+        filterAdapter = FilterProvidersAdapter(viewModel.providers, this)
+        //Toast.makeText(requireContext(), viewModel.providers.size.toString(), Toast.LENGTH_SHORT).show()
 
         binding.FiltersRV.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
         binding.FiltersRV.adapter = filterAdapter
@@ -139,7 +139,7 @@ class HomeFragment : Fragment(){
                         mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryMovieList)
                         binding.homeRecyclerView.adapter = mainRecyclerAdapter
                         viewModel.getTrendingShowsByPage(15)
-                        Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
                     is HomeViewModel.GetTrendingMoviesByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
                     is HomeViewModel.GetTrendingMoviesByPageEvent.Loading -> {
@@ -187,8 +187,8 @@ class HomeFragment : Fragment(){
                                 MainRecyclerAdapter(requireContext(), categoryMovieList)
                             binding.homeRecyclerView.adapter = mainRecyclerAdapter
                             //viewModel.getGenreShowsByPage(1)
-                            Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT)
-                                .show()
+                            //Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT)
+                                //.show()
                         }
                     }
                     is HomeViewModel.GetGenreMoviesByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
@@ -237,8 +237,8 @@ class HomeFragment : Fragment(){
                                 MainRecyclerAdapter(requireContext(), categoryShowList)
                             binding.homeRecyclerView.adapter = mainRecyclerAdapter
                             //viewModel.getGenreShowsByPage(1)
-                            Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT)
-                                .show()
+                            //Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT)
+                               // .show()
                         }
                     }
                     is HomeViewModel.GetGenreShowsByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
@@ -269,7 +269,7 @@ class HomeFragment : Fragment(){
                         categoryShowList.add(AllCategory("Trending Shows", viewModel.showList))
 //                        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryShowList)
 //                        binding.homeRecyclerView.adapter = mainRecyclerAdapter
-                        Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
                     is HomeViewModel.GetTrendingShowsByPageEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
                     is HomeViewModel.GetTrendingShowsByPageEvent.Loading -> {
@@ -287,7 +287,7 @@ class HomeFragment : Fragment(){
             viewModel.getBaseImageUrlResponse.collect { event ->
                 when(event){
                     is HomeViewModel.GetBaseImageUrlEvent.Success -> {
-                        Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                         viewModel.getImageSizes()
                     }
                     is HomeViewModel.GetBaseImageUrlEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
@@ -306,7 +306,7 @@ class HomeFragment : Fragment(){
             viewModel.getImageSizeResponse.collect { event ->
                 when(event){
                     is HomeViewModel.GetImageSizesEvent.Success -> {
-                        Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                         viewModel.getTrendingMoviesByPage(15)
 
                         viewModel.getGenreShowsByPage(10, "10759")
@@ -367,7 +367,7 @@ class HomeFragment : Fragment(){
             viewModel.getMovieGenresResponse.collect { event ->
                 when(event){
                     is HomeViewModel.GetMovieGenresEvent.Success -> {
-                        Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(requireContext(), event.resultText, Toast.LENGTH_SHORT).show()
                     }
                     is HomeViewModel.GetMovieGenresEvent.Failure -> Toast.makeText(requireContext(), event.errorText, Toast.LENGTH_SHORT).show()
                     is HomeViewModel.GetMovieGenresEvent.Loading -> {
@@ -436,6 +436,44 @@ class HomeFragment : Fragment(){
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onClick(position: Int) {
+        filterProviders(viewModel.providers[position].provider_id)
+    }
+
+
+    fun filterProviders(provider: Int){
+
+        for (category in categoryMovieList.indices) {
+
+            categoryMovieList[category].movieItems = categoryMovieList[category].movieItems.filterNot{ filtering(it, provider) } as ArrayList<MediaBody>
+
+        }
+
+//        categoryMovieList.forEach { category ->
+//
+//            category.movieItems.filter { filtering(it, provider) }
+//
+//        }
+
+        mainRecyclerAdapter = MainRecyclerAdapter(requireContext(), categoryMovieList)
+        binding.homeRecyclerView.adapter = mainRecyclerAdapter
+
+    }
+
+    fun filtering(toFilter: MediaBody, provider: Int): Boolean{
+
+        if (toFilter.providers != null && toFilter.providers!!.results != null && toFilter.providers!!.results!!.CA != null && toFilter.providers!!.results!!.CA!!.flatrate != null) {
+
+            return toFilter.providers!!.results!!.CA!!.flatrate!!.any { it.provider_id == provider }
+
+        } else {
+
+            return false
+        }
+
+
     }
 
 }

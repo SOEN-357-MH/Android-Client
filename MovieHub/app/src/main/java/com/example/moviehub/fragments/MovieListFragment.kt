@@ -51,12 +51,10 @@ class MovieListFragment : Fragment(), WatchListAdapter.OnCheckedListener {
 
         binding.mlRecyclerView.layoutManager = LinearLayoutManager(activity)
 
-        binding.tabLayout.getTabAt(viewModel.selectedTab)?.select()
+        binding.tabLayout.getTabAt(1)?.select()
 
-        viewModel.getShowWatchlist("Slayer42069")
-        viewModel.getMovieWatchlist("Slayer42069")
-
-
+        viewModel.getShowWatchlist("thelilgrant")
+        viewModel.getMovieWatchlist("thelilgrant")
 
         return binding.root
     }
@@ -101,8 +99,13 @@ class MovieListFragment : Fragment(), WatchListAdapter.OnCheckedListener {
     override fun onCheck(position: Int, isChecked: Boolean) {
         selectedPos = position
         if (isChecked) {
-            movieWatchlist.add(movieWatchlist.removeAt(position))
-            watchListAdapter?.notifyItemRemoved(position)
+            if (viewModel.selectedTab == 0) {
+                movieWatchlist.add(movieWatchlist.removeAt(selectedPos))
+                watchListAdapter?.notifyItemRemoved(selectedPos)
+            } else {
+                showWatchlist.add(showWatchlist.removeAt(selectedPos))
+                watchListAdapter?.notifyItemRemoved(selectedPos)
+            }
 
         }else{
             // unchecked

@@ -9,6 +9,9 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.ActionOnlyNavDirections
+import androidx.navigation.Navigation
+import com.example.moviehub.R
 import com.example.moviehub.databinding.FragmentRegisterBinding
 import com.example.moviehub.models.UserBody
 import com.example.moviehub.viewModels.RegisterViewModel
@@ -36,7 +39,12 @@ class RegisterFragment : Fragment() {
         // Inflate the layout for this fragment
         _binding = FragmentRegisterBinding.inflate(inflater, container, false)
 
-        registerUser("John", "Baroudi", "Slayer42069", "john@gmail.com", "123456")
+        binding.registerButton.setOnClickListener {
+            registerUser("Jonathan", "Grant", "thelilgrant", "thelil@gmail.com", "123456")
+            val action = ActionOnlyNavDirections(R.id.action_registerFragment_to_Home)
+            Navigation.findNavController(binding.root).navigate(action)
+        }
+
 
         return binding.root
     }

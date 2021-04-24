@@ -698,7 +698,8 @@ class HomeViewModel @Inject constructor(
             350,
             449,
             469,
-            492)
+            492,
+            231)
 
         var names: List<String> = listOf("Apple Itunes",
             "Google Play Movies",
@@ -721,7 +722,8 @@ class HomeViewModel @Inject constructor(
             "Apple TV Plus",
             "Global TV",
             "Club Illico",
-            "ILLICO")
+            "ILLICO",
+            "Crave Plus")
 
         var links: List<String> = listOf("/q6tl6Ib6X5FT80RMlcDbexIo4St.jpg",
         "/p3Z12gKq2qvJaUOMeKNU2mzKVI9.jpg",
@@ -738,14 +740,14 @@ class HomeViewModel @Inject constructor(
         "/vlrNqT2tFHRY6oGh1Bt7HIOHsjF.jpg",
         "/oswPTkUarKavsbi4Ec3b3SgqZ29.jpg",
         "/645d5qpsT02a1s3lBZugN8454ad.jpg",
-        "/dgPueyEdOwpQ10fjuhL2WYFQwQs.jpg",
         "/asiUYklwXjWJ7Gjobe5QSscDzQe.jpg",
+        "/dgPueyEdOwpQ10fjuhL2WYFQwQs.jpg",
         "/jYE7sFwha5HFSxWcTlyU3BQrcP2.jpg",
         "/A3WLxoSkmuxwaQkpfwL6H8WwWwM.jpg",
         "/xTjpCwl6RfpeSZbB9yI837kW1v7.jpg",
         "/nqOk5WIF1IalIgKdF120fP10boq.jpg",
         "/mK7Au1go2M5MqyZ8CjkpJPM6Apb.jpg",
-        "/1ssJ1YTw7WT7BuBG9fh6yJ94tZl.jpg)")
+        "/1ssJ1YTw7WT7BuBG9fh6yJ94tZl.jpg")
 
         ids.forEachIndexed { index, s ->
             providers.add(AdModel(0,"${baseImageUrl}${imageSizes[6]}${links[index]}", ids[index], names[index] ))

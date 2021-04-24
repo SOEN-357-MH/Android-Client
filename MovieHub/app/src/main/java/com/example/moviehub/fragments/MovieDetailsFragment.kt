@@ -82,10 +82,10 @@ class MovieDetailsFragment : Fragment() {
                 val type = args.mediaBody.media_type
                 println(type)
                 if (args.mediaBody.media_type.equals("m")) addMovieToWatchlist(
-                    "Slayer42069",
+                    "thelilgrant",
                     args.mediaBody.id
                 )
-                else addShowToWatchlist("Slayer42069", args.mediaBody.id)
+                else addShowToWatchlist("thelilgrant", args.mediaBody.id)
             }
         }
 

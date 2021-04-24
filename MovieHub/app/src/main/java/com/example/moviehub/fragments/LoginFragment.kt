@@ -37,12 +37,13 @@ class LoginFragment : Fragment() {
         _binding = FragmentLoginBinding.inflate(inflater, container, false)
 
         binding.button.setOnClickListener{
-            loginUser("Slayer42069", "123456")
             val action = LoginFragmentDirections.actionLoginFragmentToRegisterFragment()
             Navigation.findNavController(binding.root).navigate(action)
+
         }
 
         binding.loginButton.setOnClickListener{
+            loginUser("thelilgrant", "123456")
             val action = LoginFragmentDirections.actionLoginFragmentToHomeFragment()
             Navigation.findNavController(binding.root).navigate(action)
         }
